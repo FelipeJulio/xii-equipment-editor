@@ -1,0 +1,52 @@
+export function exportCache(value: unknown, indent = 2): string {
+  const isValidLuaKey = (key: string): boolean =>
+    /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(key);
+
+  const escapeString = (s: string): string =>
+    `"${s.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`;
+
+  const space = (lvl: number) => " ".repeat(lvl * indent);
+
+  const ignoredKeys = new Set([
+    "id",
+    "name",
+    "license",
+    "category",
+    "type",
+    "notes",
+  ]);
+
+  const serialize = (val: unknown, lvl = 0): string => {
+    const pad = space(lvl);
+    const padNext = space(lvl + 1);
+
+    if (val === null || val === undefined) return "nil";
+    if (typeof val === "boolean") return val ? "true" : "false";
+    if (typeof val === "number") return val.toString();
+    if (typeof val === "string") return escapeString(val);
+
+    if (Array.isArray(val)) {
+      if (val.length === 0) return "{}";
+      return `{\n${val
+        .map((v) => `${padNext}${serialize(v, lvl + 1)}`)
+        .join(",\n")}\n${pad}}`;
+    }
+
+    if (typeof val === "object") {
+      const entries = Object.entries(val).filter(
+        ([key]) => !ignoredKeys.has(key)
+      );
+      if (entries.length === 0) return "{}";
+      return `{\n${entries
+        .map(([key, v]) => {
+          const safeKey = isValidLuaKey(key) ? key : `["${key}"]`;
+          return `${padNext}${safeKey} = ${serialize(v, lvl + 1)}`;
+        })
+        .join(",\n")}\n${pad}}`;
+    }
+
+    throw new Error(`Unsupported type: ${typeof val}`);
+  };
+
+  return `return ${serialize(value)}\n`;
+}
