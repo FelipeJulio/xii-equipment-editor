@@ -420,7 +420,7 @@ export function DataTable<TData extends EquipmentItem>({
           <p className="text-sm font-medium">Export</p>
           <div className="flex flex-row gap-2">
             <Button
-              variant="outline"
+              variant="default"
               className="cursor-pointer"
               onClick={() => {
                 const lua = exportCache(getEquipmentData());

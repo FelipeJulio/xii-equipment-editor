@@ -14,11 +14,33 @@ import {
   affinityTypeLabels,
 } from "@/typings/types";
 
-import { EditModal } from "./EditModal";
+import { EditButton } from "./EditButton";
+import ItemImage from "./ItemImage";
 import GameIcon from "./GameIcon";
 
 export function getColumns(level: number): ColumnDef<EquipmentItem>[] {
   return [
+    {
+      id: "image",
+      header: "Img",
+      size: 48,
+      cell: ({ row }) => {
+        const bit = row.original.bit;
+
+        return (
+          <div className="flex justify-center">
+            <div className="border rounded overflow-hidden aspect-2/3 bg-black">
+              <ItemImage
+                index={bit}
+                alt={`Item ${bit}`}
+                width={32}
+                height={32}
+              />
+            </div>
+          </div>
+        );
+      },
+    },
     {
       accessorKey: "bit",
       header: "ID",
@@ -183,7 +205,7 @@ export function getColumns(level: number): ColumnDef<EquipmentItem>[] {
       header: "Actions",
       cell: ({ row }) => {
         const item = row.original;
-        return <EditModal item={item} />;
+        return <EditButton item={item} />;
       },
     },
   ];

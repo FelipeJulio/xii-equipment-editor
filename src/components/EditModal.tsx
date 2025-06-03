@@ -64,12 +64,14 @@ import { GenerateAttribute } from "./GenerateAttribute";
 import GameIcon from "./GameIcon";
 
 import { getEquipmentData, saveEquipmentData } from "@/lib/localStorage";
+import ItemImage from "./ItemImage";
 
 interface EditModalProps {
   item: EquipmentItem;
+  index: number;
 }
 
-export function EditModal({ item }: EditModalProps) {
+export function EditModal({ item, index }: EditModalProps) {
   const [edited, setEdited] = useState<EquipmentItem>(() => {
     return JSON.parse(JSON.stringify(item));
   });
@@ -451,66 +453,79 @@ export function EditModal({ item }: EditModalProps) {
             <TabsContent value="details" className="flex flex-col gap-2 h-full">
               <h3 className="font-semibold">Details</h3>
               <Separator />
-              <div className="flex flex-col border p-3 gap-4 rounded h-full">
-                <div className="grid grid-cols-4 gap-4">
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor="name">Name</Label>
-                    <Input
-                      id="name"
-                      disabled
-                      value={edited.name}
-                      onChange={(e) =>
-                        setEdited((prev) => ({
-                          ...prev,
-                          name: e.target.value,
-                        }))
-                      }
-                    />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor="license">License</Label>
-                    <Input
-                      id="license"
-                      disabled
-                      value={edited.license}
-                      onChange={(e) =>
-                        setEdited((prev) => ({
-                          ...prev,
-                          license: e.target.value,
-                        }))
-                      }
-                    />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor="category">Category</Label>
-                    <Input
-                      id="category"
-                      disabled
-                      value={edited.category}
-                      onChange={(e) =>
-                        setEdited((prev) => ({
-                          ...prev,
-                          category: e.target.value,
-                        }))
-                      }
-                    />
-                  </div>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="notes">Notes</Label>
-                  <Textarea
-                    id="notes"
-                    disabled
-                    maxLength={110}
-                    value={edited.notes}
-                    onChange={(e) =>
-                      setEdited((prev) => ({ ...prev, notes: e.target.value }))
-                    }
-                    className="resize-none"
+              <div className="flex flex-row border p-3 gap-4 rounded h-full items-start">
+                <div className="flex border  overflow-hidden aspect-2/3 bg-black rounded-md">
+                  <ItemImage
+                    index={index}
+                    alt={`Item ${index}`}
+                    width={106}
+                    height={106}
                   />
-                  <p className="text-xs text-muted-foreground text-right">
-                    {edited.notes.length}/110
-                  </p>
+                </div>
+                <div className="flex flex-col gap-4">
+                  <div className="grid grid-cols-4 gap-4">
+                    <div className="flex flex-col gap-2">
+                      <Label htmlFor="name">Name</Label>
+                      <Input
+                        id="name"
+                        disabled
+                        value={edited.name}
+                        onChange={(e) =>
+                          setEdited((prev) => ({
+                            ...prev,
+                            name: e.target.value,
+                          }))
+                        }
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Label htmlFor="license">License</Label>
+                      <Input
+                        id="license"
+                        disabled
+                        value={edited.license}
+                        onChange={(e) =>
+                          setEdited((prev) => ({
+                            ...prev,
+                            license: e.target.value,
+                          }))
+                        }
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Label htmlFor="category">Category</Label>
+                      <Input
+                        id="category"
+                        disabled
+                        value={edited.category}
+                        onChange={(e) =>
+                          setEdited((prev) => ({
+                            ...prev,
+                            category: e.target.value,
+                          }))
+                        }
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Label htmlFor="notes">Notes</Label>
+                    <Textarea
+                      id="notes"
+                      disabled
+                      maxLength={110}
+                      value={edited.notes}
+                      onChange={(e) =>
+                        setEdited((prev) => ({
+                          ...prev,
+                          notes: e.target.value,
+                        }))
+                      }
+                      className="resize-none"
+                    />
+                    <p className="text-xs text-muted-foreground text-right">
+                      {edited.notes.length}/110
+                    </p>
+                  </div>
                 </div>
               </div>
             </TabsContent>
