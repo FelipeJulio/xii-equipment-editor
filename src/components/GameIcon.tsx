@@ -25,34 +25,30 @@ const GameIcon: React.FC<GameIconProps> = ({
       width={size}
       className={className}
       style={{ height: size, width: "auto" }}
-      unoptimized
     />
   );
 };
 
 function resolveIconPath(type: IconType, name: string): string {
   const n = normalize(name);
-  // Leva em conta basePath = "/xii-equipment-editor" em produção, "" em dev
-  const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
 
   if (type === "ui") {
-    return `${base}/icons/ui/${n}.png`;
+    return `/icons/ui/${n}.png`;
   }
 
   if (type === "status") {
-    return `${base}/icons/status/${n}.png`;
+    return `/icons/status/${n}.png`;
   }
 
   if (type === "elements") {
-    return `${base}/icons/elements/${n}.png`;
+    return `/icons/elements/${n}.png`;
   }
   if (type === "affinity") {
-    return `${base}/icons/status/${n}.png`;
+    return `/icons/status/${n}.png`;
   }
 
-  // equipamentos ficam em public/icons/equipments/…
   const mappedType = categoryToIconTypeMap[n] || type;
-  return `${base}/icons/equipments/${normalize(mappedType)}/${n}.png`;
+  return `/icons/equipments/${normalize(mappedType)}/${n}.png`;
 }
 
 function normalize(str: string): string {

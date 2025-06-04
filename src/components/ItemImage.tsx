@@ -17,8 +17,7 @@ export default function ItemImage({
   height = 32,
 }: ItemImageProps) {
   const key = String(index);
-  const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
-  const initialSrc = `${base}/previews/item_${key}.png`;
+  const initialSrc = `/previews/item_${key}.png`;
   const [src, setSrc] = useState<string>(initialSrc);
 
   useEffect(() => {
@@ -26,7 +25,7 @@ export default function ItemImage({
   }, [initialSrc]);
 
   const handleError = () => {
-    setSrc(`${base}/previews/item_none.png`);
+    setSrc("/previews/item_none.png");
   };
 
   return (
