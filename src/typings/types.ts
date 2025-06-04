@@ -228,7 +228,7 @@ export const affinityIcons: Record<AffinityTypeKey, number> = {
 
 export type IconType =
   | "elements"
-  | "statusEffect"
+  | "status"
   | "affinity"
   | "accessories"
   | "ammunitions"

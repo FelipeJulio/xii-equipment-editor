@@ -63,7 +63,7 @@ export function DataTable<TData extends EquipmentItem>({
   const [level, setLevel] = useState<number>(1);
 
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 20 });
+  const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 14 });
 
   const categories = useMemo(
     () => Array.from(new Set(data.map((item) => item.category))),
@@ -175,7 +175,7 @@ export function DataTable<TData extends EquipmentItem>({
     getPaginationRowModel: getPaginationRowModel(),
   });
 
-  function getSigilColor(level: number): string {
+  const getSigilColor = (level: number): string => {
     if (level >= 12) {
       return "#fd4336";
     } else if (level >= 11) {
@@ -189,7 +189,7 @@ export function DataTable<TData extends EquipmentItem>({
     } else {
       return "";
     }
-  }
+  };
 
   const { filterCount, isAnyFilterActive } = useMemo(() => {
     let count = 0;
@@ -223,7 +223,7 @@ export function DataTable<TData extends EquipmentItem>({
     <div className="space-y-2">
       <div className="flex flex-wrap gap-3 items-center py-4">
         <div className="flex flex-col gap-1">
-          <p className="text-x font-medium">Search</p>
+          <p className="text-sm font-medium">Search</p>
           <Input
             placeholder="Name, License, Category..."
             value={globalFilter}
@@ -275,7 +275,7 @@ export function DataTable<TData extends EquipmentItem>({
               <SelectItem value="all">All</SelectItem>
               {Object.entries(statusLabels).map(([key, label]) => (
                 <SelectItem className="cursor-pointer" key={key} value={key}>
-                  <GameIcon type="statusEffect" name={label} size={16} />
+                  <GameIcon type="status" name={label} size={16} />
                   {label}
                 </SelectItem>
               ))}
@@ -292,7 +292,7 @@ export function DataTable<TData extends EquipmentItem>({
               <SelectItem value="all">All</SelectItem>
               {Object.entries(statusLabels).map(([key, label]) => (
                 <SelectItem className="cursor-pointer" key={key} value={key}>
-                  <GameIcon type="statusEffect" name={label} size={16} />
+                  <GameIcon type="status" name={label} size={16} />
                   {label}
                 </SelectItem>
               ))}
@@ -309,7 +309,7 @@ export function DataTable<TData extends EquipmentItem>({
               <SelectItem value="all">All</SelectItem>
               {Object.entries(statusLabels).map(([key, label]) => (
                 <SelectItem className="cursor-pointer" key={key} value={key}>
-                  <GameIcon type="statusEffect" name={label} size={16} />
+                  <GameIcon type="status" name={label} size={16} />
                   {label}
                 </SelectItem>
               ))}
@@ -506,11 +506,11 @@ export function DataTable<TData extends EquipmentItem>({
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="max-h-96">
-              {[10, 20, 30, 50, 100].map((size) => (
+              {[14, 28, 42, 56, 100].map((size) => (
                 <SelectItem
                   key={size}
                   value={String(size)}
-                  className="flex flex-row items-center"
+                  className="flex flex-row items-center cursor-pointer"
                 >
                   {size}
                 </SelectItem>
@@ -519,6 +519,7 @@ export function DataTable<TData extends EquipmentItem>({
           </Select>
           <Button
             variant="outline"
+            className="cursor-pointer"
             size="sm"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
@@ -528,6 +529,7 @@ export function DataTable<TData extends EquipmentItem>({
           <Button
             variant="outline"
             size="sm"
+            className="cursor-pointer"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >

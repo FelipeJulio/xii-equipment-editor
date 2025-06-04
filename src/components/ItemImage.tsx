@@ -35,8 +35,7 @@ export default function ItemImage({
       width={width}
       height={height}
       onError={handleError}
-      style={{ objectFit: "contain" }}
-      className="flex"
+      className="flex aspect-2/3 object-contain"
     />
   );
 }

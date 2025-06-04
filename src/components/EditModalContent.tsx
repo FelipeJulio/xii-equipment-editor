@@ -369,25 +369,46 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
           <Tabs defaultValue="account" className="flex flex-col w-full">
             <div className="flex flex-row justify-between">
               <TabsList className="mb-3">
-                <TabsTrigger value="details" className="cursor-pointer">
+                <TabsTrigger
+                  value="details"
+                  className="cursor-pointer hover:opacity-90"
+                >
                   Details
                 </TabsTrigger>
-                <TabsTrigger value="attributes" className="cursor-pointer">
+                <TabsTrigger
+                  value="attributes"
+                  className="cursor-pointer hover:opacity-90"
+                >
                   Attributes
                 </TabsTrigger>
-                <TabsTrigger value="elements" className="cursor-pointer">
+                <TabsTrigger
+                  value="elements"
+                  className="cursor-pointer hover:opacity-90"
+                >
                   Elements
                 </TabsTrigger>
-                <TabsTrigger value="onhit" className="cursor-pointer">
+                <TabsTrigger
+                  value="onhit"
+                  className="cursor-pointer hover:opacity-90"
+                >
                   On-Hit
                 </TabsTrigger>
-                <TabsTrigger value="onequip" className="cursor-pointer">
+                <TabsTrigger
+                  value="onequip"
+                  className="cursor-pointer hover:opacity-90"
+                >
                   On-Equip
                 </TabsTrigger>
-                <TabsTrigger value="immunity" className="cursor-pointer">
+                <TabsTrigger
+                  value="immunity"
+                  className="cursor-pointer hover:opacity-90"
+                >
                   Immunity
                 </TabsTrigger>
-                <TabsTrigger value="affinity" className="cursor-pointer">
+                <TabsTrigger
+                  value="affinity"
+                  className="cursor-pointer hover:opacity-90"
+                >
                   Affinity
                 </TabsTrigger>
               </TabsList>
@@ -449,12 +470,12 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
               <h3 className="font-semibold">Details</h3>
               <Separator />
               <div className="flex flex-row border p-3 gap-4 rounded h-full items-start">
-                <div className="flex border  overflow-hidden aspect-2/3 bg-black rounded-md">
+                <div className="flex border border-input overflow-hidden aspect-2/3 bg-black rounded-md">
                   <ItemImage
                     index={item.bit}
-                    alt={`Item ${item.bit}`}
+                    alt={edited.name}
                     width={106}
-                    height={106}
+                    height={160}
                   />
                 </div>
                 <div className="flex flex-col gap-4">
@@ -698,7 +719,7 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                                       >
                                         <div className="flex items-center gap-2">
                                           <GameIcon
-                                            type="statusEffect"
+                                            type="status"
                                             name={sk}
                                             size={16}
                                           />

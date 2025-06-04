@@ -18,6 +18,22 @@ import { EditButton } from "./EditButton";
 import ItemImage from "./ItemImage";
 import GameIcon from "./GameIcon";
 
+const getSigilColor = (level: number): string => {
+  if (level >= 12) {
+    return "#fd4336";
+  } else if (level >= 11) {
+    return "#ffa825";
+  } else if (level >= 9) {
+    return "#784bff";
+  } else if (level >= 6) {
+    return "#339dff";
+  } else if (level >= 3) {
+    return "#4ac24a";
+  } else {
+    return "";
+  }
+};
+
 export function getColumns(level: number): ColumnDef<EquipmentItem>[] {
   return [
     {
@@ -26,16 +42,11 @@ export function getColumns(level: number): ColumnDef<EquipmentItem>[] {
       size: 48,
       cell: ({ row }) => {
         const bit = row.original.bit;
-
+        const name = row.getValue("name") as string;
         return (
           <div className="flex justify-center">
-            <div className="border rounded overflow-hidden aspect-2/3 bg-black">
-              <ItemImage
-                index={bit}
-                alt={`Item ${bit}`}
-                width={32}
-                height={32}
-              />
+            <div className="border rounded overflow-hidden bg-black">
+              <ItemImage index={bit} alt={name} width={32} height={48} />
             </div>
           </div>
         );
@@ -53,8 +64,12 @@ export function getColumns(level: number): ColumnDef<EquipmentItem>[] {
       accessorKey: "name",
       header: "Name",
       cell: ({ row }) => {
-        const v = row.getValue("name") as string;
-        return v ? v : "-";
+        const name = row.getValue("name") as string;
+        return (
+          <span className="font-medium" style={{ color: getSigilColor(level) }}>
+            {name}+{level}
+          </span>
+        );
       },
     },
     {
@@ -107,7 +122,7 @@ export function getColumns(level: number): ColumnDef<EquipmentItem>[] {
           <div className="flex flex-wrap gap-2 items-center">
             {entries.map((s, i) => (
               <div key={i} className="flex items-center gap-1">
-                <GameIcon type="statusEffect" name={s.name} size={16} />
+                <GameIcon type="status" name={s.name} size={16} />
                 <span>{statusLabels[s.name]}</span>
               </div>
             ))}
@@ -127,7 +142,7 @@ export function getColumns(level: number): ColumnDef<EquipmentItem>[] {
           <div className="flex flex-wrap gap-2 items-center">
             {entries.map((s, i) => (
               <div key={i} className="flex items-center gap-1">
-                <GameIcon type="statusEffect" name={s.name} size={16} />
+                <GameIcon type="status" name={s.name} size={16} />
                 <span>{statusLabels[s.name]}</span>
               </div>
             ))}
@@ -147,7 +162,7 @@ export function getColumns(level: number): ColumnDef<EquipmentItem>[] {
           <div className="flex flex-wrap gap-2 items-center">
             {entries.map((s, i) => (
               <div key={i} className="flex items-center gap-1">
-                <GameIcon type="statusEffect" name={s.name} size={16} />
+                <GameIcon type="status" name={s.name} size={16} />
                 <span>{statusLabels[s.name]}</span>
               </div>
             ))}

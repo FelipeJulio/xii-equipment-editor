@@ -703,7 +703,7 @@ export function EditModal({ item, index }: EditModalProps) {
                                       >
                                         <div className="flex items-center gap-2">
                                           <GameIcon
-                                            type="statusEffect"
+                                            type="status"
                                             name={sk}
                                             size={16}
                                           />

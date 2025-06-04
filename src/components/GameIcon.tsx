@@ -31,24 +31,32 @@ const GameIcon: React.FC<GameIconProps> = ({
 };
 
 function resolveIconPath(type: IconType, name: string): string {
+  const n = normalize(name);
+
   if (type === "ui") {
-    return `/icons/ui/${normalize(name)}.png`;
+    return `/icons/ui/${n}.png`;
   }
 
-  if (type === "elements" || type === "statusEffect" || type === "affinity") {
-    return `/icons/${type}/${normalize(name)}.png`;
+  if (type === "status") {
+    return `/icons/status/${n}.png`;
   }
 
-  const mappedType = categoryToIconTypeMap[normalize(name)] || type;
+  if (type === "elements") {
+    return `/icons/elements/${n}.png`;
+  }
+  if (type === "affinity") {
+    return `/icons/status/${n}.png`;
+  }
 
-  return `/icons/equipment/${normalize(mappedType)}/${normalize(name)}.png`;
+  const mappedType = categoryToIconTypeMap[n] || type;
+  return `/icons/equipments/${normalize(mappedType)}/${n}.png`;
 }
 
 function normalize(str: string): string {
   return str
     .toLowerCase()
-    .replace(/[\s-]+/g, "_") // espaços ou hífens → underscore
-    .replace(/[^a-z0-9_]/g, ""); // remove tudo que não for letra, número ou underscore
+    .replace(/[\s-]+/g, "_")
+    .replace(/[^a-z0-9_]/g, "");
 }
 
 export default GameIcon;
