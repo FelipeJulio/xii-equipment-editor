@@ -16,9 +16,10 @@ export default function ItemImage({
   width = 32,
   height = 32,
 }: ItemImageProps) {
-  const key = String(index);
+  const key = String(index).padStart(2, "0");
   const initialSrc = `/previews/item_${key}.png`;
-  const [src, setSrc] = useState<string>(initialSrc);
+
+  const [src, setSrc] = useState(initialSrc);
 
   useEffect(() => {
     setSrc(initialSrc);
@@ -36,6 +37,7 @@ export default function ItemImage({
       height={height}
       onError={handleError}
       className="flex aspect-2/3 object-contain"
+      unoptimized
     />
   );
 }

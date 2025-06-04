@@ -25,6 +25,7 @@ const GameIcon: React.FC<GameIconProps> = ({
       width={size}
       className={className}
       style={{ height: size, width: "auto" }}
+      unoptimized
     />
   );
 };
@@ -35,11 +36,9 @@ function resolveIconPath(type: IconType, name: string): string {
   if (type === "ui") {
     return `/icons/ui/${n}.png`;
   }
-
   if (type === "status") {
     return `/icons/status/${n}.png`;
   }
-
   if (type === "elements") {
     return `/icons/elements/${n}.png`;
   }
@@ -48,7 +47,7 @@ function resolveIconPath(type: IconType, name: string): string {
   }
 
   const mappedType = categoryToIconTypeMap[n] || type;
-  return `/icons/equipments/${normalize(mappedType)}/${n}.png`;
+  return `/icons/equipments/${mappedType}/${n}.png`;
 }
 
 function normalize(str: string): string {
