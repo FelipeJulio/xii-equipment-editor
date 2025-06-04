@@ -16,8 +16,9 @@ export default function ItemImage({
   width = 32,
   height = 32,
 }: ItemImageProps) {
+  const basePath = "/xii-equipment-editor";
   const key = String(index).padStart(2, "0");
-  const initialSrc = `/previews/item_${key}.png`;
+  const initialSrc = `${basePath}/assets/previews/item_${key}.png`;
 
   const [src, setSrc] = useState(initialSrc);
 
@@ -26,7 +27,7 @@ export default function ItemImage({
   }, [initialSrc]);
 
   const handleError = () => {
-    setSrc("/previews/item_none.png");
+    setSrc(`${basePath}/assets/previews/item_none.png`);
   };
 
   return (
@@ -37,7 +38,6 @@ export default function ItemImage({
       height={height}
       onError={handleError}
       className="flex aspect-2/3 object-contain"
-      unoptimized
     />
   );
 }

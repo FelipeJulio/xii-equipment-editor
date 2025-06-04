@@ -9,6 +9,35 @@ interface GameIconProps {
   className?: string;
 }
 
+const basePath = "/xii-equipment-editor";
+
+const resolveIconPath = (type: IconType, name: string): string => {
+  const n = normalize(name);
+
+  if (type === "ui") {
+    return `${basePath}/assets/ui/${n}.png`;
+  }
+  if (type === "status") {
+    return `${basePath}/assets/status/${n}.png`;
+  }
+  if (type === "elements") {
+    return `${basePath}/assets/elements/${n}.png`;
+  }
+  if (type === "affinity") {
+    return `${basePath}/assets/status/${n}.png`;
+  }
+
+  const mappedType = categoryToIconTypeMap[n] || type;
+  return `${basePath}/assets/equipments/${mappedType}/${n}.png`;
+};
+
+const normalize = (str: string): string => {
+  return str
+    .toLowerCase()
+    .replace(/[\s-]+/g, "_")
+    .replace(/[^a-z0-9_]/g, "");
+};
+
 const GameIcon: React.FC<GameIconProps> = ({
   type,
   name,
@@ -25,36 +54,8 @@ const GameIcon: React.FC<GameIconProps> = ({
       width={size}
       className={className}
       style={{ height: size, width: "auto" }}
-      unoptimized
     />
   );
 };
-
-function resolveIconPath(type: IconType, name: string): string {
-  const n = normalize(name);
-
-  if (type === "ui") {
-    return `/icons/ui/${n}.png`;
-  }
-  if (type === "status") {
-    return `/icons/status/${n}.png`;
-  }
-  if (type === "elements") {
-    return `/icons/elements/${n}.png`;
-  }
-  if (type === "affinity") {
-    return `/icons/status/${n}.png`;
-  }
-
-  const mappedType = categoryToIconTypeMap[n] || type;
-  return `/icons/equipments/${mappedType}/${n}.png`;
-}
-
-function normalize(str: string): string {
-  return str
-    .toLowerCase()
-    .replace(/[\s-]+/g, "_")
-    .replace(/[^a-z0-9_]/g, "");
-}
 
 export default GameIcon;
