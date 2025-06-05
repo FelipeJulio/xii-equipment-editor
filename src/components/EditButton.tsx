@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Edit, Loader2 } from "lucide-react";
 
 const EditModalContent = dynamic(
-  () => import("./EditModalContent").then((mod) => mod.EditModalContent),
+  () => import("@/components/EditModal").then((mod) => mod.EditModalContent),
   {
     ssr: false,
   }
@@ -22,7 +22,7 @@ export function EditButton({ item }: { item: EquipmentItem }) {
     setIsLoading(true);
 
     try {
-      await import("./EditModalContent");
+      await import("@/components/EditModal");
       setOpen(true);
     } catch (err) {
       console.error("Falha ao carregar o modal:", err);

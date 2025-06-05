@@ -14,9 +14,9 @@ import {
   affinityTypeLabels,
 } from "@/typings/types";
 
-import { EditButton } from "./EditButton";
-import ItemImage from "./ItemImage";
-import GameIcon from "./GameIcon";
+import { EditButton } from "@/components/EditButton";
+import ItemImage from "@/components/ItemImage";
+import GameIcon from "@/components/GameIcon";
 
 const getSigilColor = (level: number): string => {
   if (level >= 12) {

@@ -11,10 +11,10 @@ import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { Star } from "lucide-react";
 import { attributeLabels } from "@/typings/types";
 import type { AttributeKey } from "@/typings/types";
-import { Separator } from "./ui/separator";
 
 interface GenerateAttributeProps {
   attributeKey: AttributeKey;

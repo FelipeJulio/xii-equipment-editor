@@ -41,8 +41,8 @@ import {
 import { exportCache } from "@/lib/exportCache";
 import { getEquipmentData } from "@/lib/localStorage";
 import { Download, Meh, Trash2 } from "lucide-react";
-import { getColumns } from "./EquipmentColumns";
-import GameIcon from "./GameIcon";
+import { getColumns } from "@/components/EquipmentColumns";
+import GameIcon from "@/components/GameIcon";
 
 interface DataTableProps<TData extends EquipmentItem> {
   data: TData[];
@@ -220,7 +220,7 @@ export function DataTable<TData extends EquipmentItem>({
   ]);
 
   return (
-    <div className="space-y-2">
+    <div className="flex flex-col gap-2">
       <div className="flex flex-wrap gap-3 items-center rounded-md border p-4">
         <div className="flex flex-col gap-1">
           <p className="text-sm font-medium">Search</p>
@@ -234,7 +234,7 @@ export function DataTable<TData extends EquipmentItem>({
         <div className="flex flex-col gap-1">
           <p className="text-sm font-medium">Category</p>
           <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-            <SelectTrigger className="cursor-pointer">
+            <SelectTrigger className="cursor-pointer min-w-[66px]">
               <SelectValue placeholder="Category" />
             </SelectTrigger>
             <SelectContent className="max-h-96">
@@ -251,7 +251,7 @@ export function DataTable<TData extends EquipmentItem>({
         <div className="flex flex-col gap-1">
           <p className="text-sm font-medium">Element</p>
           <Select value={elementFilter} onValueChange={setElementFilter}>
-            <SelectTrigger className="cursor-pointer">
+            <SelectTrigger className="cursor-pointer min-w-[66px]">
               <SelectValue placeholder="Element" />
             </SelectTrigger>
             <SelectContent className="max-h-96">
@@ -268,7 +268,7 @@ export function DataTable<TData extends EquipmentItem>({
         <div className="flex flex-col gap-1">
           <p className="text-sm font-medium">On-Hit</p>
           <Select value={onhitFilter} onValueChange={setOnhitFilter}>
-            <SelectTrigger className="cursor-pointer">
+            <SelectTrigger className="cursor-pointer min-w-[66px]">
               <SelectValue placeholder="On-Hit" />
             </SelectTrigger>
             <SelectContent className="max-h-96">
@@ -285,7 +285,7 @@ export function DataTable<TData extends EquipmentItem>({
         <div className="flex flex-col gap-1">
           <p className="text-sm font-medium">On-Equip</p>
           <Select value={onequipFilter} onValueChange={setOnequipFilter}>
-            <SelectTrigger className="cursor-pointer">
+            <SelectTrigger className="cursor-pointer min-w-[66px]">
               <SelectValue placeholder="On-Equip" />
             </SelectTrigger>
             <SelectContent className="max-h-96">
@@ -302,7 +302,7 @@ export function DataTable<TData extends EquipmentItem>({
         <div className="flex flex-col gap-1">
           <p className="text-sm font-medium">immunity</p>
           <Select value={immunityFilter} onValueChange={setImmunityFilter}>
-            <SelectTrigger className="cursor-pointer">
+            <SelectTrigger className="cursor-pointer min-w-[66px]">
               <SelectValue placeholder="immunity" />
             </SelectTrigger>
             <SelectContent className="max-h-96">
@@ -323,7 +323,7 @@ export function DataTable<TData extends EquipmentItem>({
               value={affinityTypeFilter}
               onValueChange={setAffinityTypeFilter}
             >
-              <SelectTrigger className="cursor-pointer rounded-none">
+              <SelectTrigger className="cursor-pointer min-w-[66px]">
                 <SelectValue
                   className="cursor-pointer"
                   placeholder="Affinity Type"
@@ -342,7 +342,7 @@ export function DataTable<TData extends EquipmentItem>({
               value={affinityElementFilter}
               onValueChange={setAffinityElementFilter}
             >
-              <SelectTrigger className="cursor-pointer">
+              <SelectTrigger className="cursor-pointer min-w-[66px]">
                 <SelectValue
                   className="cursor-pointer"
                   placeholder="Affinity Element"
@@ -366,7 +366,7 @@ export function DataTable<TData extends EquipmentItem>({
             value={String(level)}
             onValueChange={(val) => setLevel(Number(val))}
           >
-            <SelectTrigger className="cursor-pointer">
+            <SelectTrigger className="cursor-pointer min-w-[175px]">
               <SelectValue placeholder="Centurio Sigil Level" />
             </SelectTrigger>
             <SelectContent className="max-h-96">
@@ -441,7 +441,7 @@ export function DataTable<TData extends EquipmentItem>({
           </div>
         </div>
       </div>
-      <div className="rounded-md border">
+      <div className="rounded-md border flex min-h-[980px]">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((hg) => (
@@ -502,7 +502,7 @@ export function DataTable<TData extends EquipmentItem>({
               setPagination((p) => ({ ...p, pageSize: Number(val) }))
             }
           >
-            <SelectTrigger className="cursor-pointer" size="sm">
+            <SelectTrigger className="cursor-pointer min-w-[66px]" size="sm">
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="max-h-96">

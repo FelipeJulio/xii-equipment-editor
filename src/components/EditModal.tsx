@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import {
   Dialog,
-  DialogTrigger,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -37,7 +36,7 @@ import {
 
 import { toast } from "sonner";
 
-import { Edit, Plus, Save, Trash } from "lucide-react";
+import { Plus, Save, Trash } from "lucide-react";
 
 import type {
   EquipmentItem,
@@ -60,24 +59,23 @@ import {
   affinityIcons,
 } from "@/typings/types";
 
-import { GenerateAttribute } from "./GenerateAttribute";
-import GameIcon from "./GameIcon";
+import { GenerateAttribute } from "@/components/GenerateAttribute";
+import GameIcon from "@/components/GameIcon";
 
 import { getEquipmentData, saveEquipmentData } from "@/lib/localStorage";
-import ItemImage from "./ItemImage";
+import ItemImage from "@/components/ItemImage";
 
 interface EditModalProps {
   item: EquipmentItem;
-  index: number;
+  onClose: () => void;
 }
 
-export function EditModal({ item, index }: EditModalProps) {
+export function EditModalContent({ item, onClose }: EditModalProps) {
   const [edited, setEdited] = useState<EquipmentItem>(() => {
     return JSON.parse(JSON.stringify(item));
   });
 
   const [isEditedDirty, setIsEditedDirty] = useState(false);
-  const [open, setOpen] = useState(false);
   const [openedAttrKey, setOpenedAttrKey] = useState<AttributeKey | null>(null);
 
   useEffect(() => {
@@ -327,6 +325,7 @@ export function EditModal({ item, index }: EditModalProps) {
       toast.success("Item saved successfully", {
         description: `ID ${toSave.bit} (${toSave.name}) was updated.`,
       });
+      onClose();
     } else {
       toast.error("Save failed", {
         description: "Something went wrong.",
@@ -347,7 +346,7 @@ export function EditModal({ item, index }: EditModalProps) {
 
   return (
     <Dialog
-      open={open}
+      open={true}
       onOpenChange={(newState) => {
         if (!newState && isEditedDirty) {
           toast.warning("You have unsaved changes.", {
@@ -355,15 +354,11 @@ export function EditModal({ item, index }: EditModalProps) {
           });
           return;
         }
-        setOpen(newState);
+        if (!newState) {
+          onClose();
+        }
       }}
     >
-      <DialogTrigger asChild>
-        <Button className="cursor-pointer" size="sm">
-          Edit
-          <Edit />
-        </Button>
-      </DialogTrigger>
       <DialogContent className="flex flex-col h-full max-h-[80vh] w-full sm:max-w-[1160px] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{edited.name}</DialogTitle>
@@ -374,25 +369,46 @@ export function EditModal({ item, index }: EditModalProps) {
           <Tabs defaultValue="account" className="flex flex-col w-full">
             <div className="flex flex-row justify-between">
               <TabsList className="mb-3">
-                <TabsTrigger value="details" className="cursor-pointer">
+                <TabsTrigger
+                  value="details"
+                  className="cursor-pointer hover:opacity-90"
+                >
                   Details
                 </TabsTrigger>
-                <TabsTrigger value="attributes" className="cursor-pointer">
+                <TabsTrigger
+                  value="attributes"
+                  className="cursor-pointer hover:opacity-90"
+                >
                   Attributes
                 </TabsTrigger>
-                <TabsTrigger value="elements" className="cursor-pointer">
+                <TabsTrigger
+                  value="elements"
+                  className="cursor-pointer hover:opacity-90"
+                >
                   Elements
                 </TabsTrigger>
-                <TabsTrigger value="onhit" className="cursor-pointer">
+                <TabsTrigger
+                  value="onhit"
+                  className="cursor-pointer hover:opacity-90"
+                >
                   On-Hit
                 </TabsTrigger>
-                <TabsTrigger value="onequip" className="cursor-pointer">
+                <TabsTrigger
+                  value="onequip"
+                  className="cursor-pointer hover:opacity-90"
+                >
                   On-Equip
                 </TabsTrigger>
-                <TabsTrigger value="immunity" className="cursor-pointer">
+                <TabsTrigger
+                  value="immunity"
+                  className="cursor-pointer hover:opacity-90"
+                >
                   Immunity
                 </TabsTrigger>
-                <TabsTrigger value="affinity" className="cursor-pointer">
+                <TabsTrigger
+                  value="affinity"
+                  className="cursor-pointer hover:opacity-90"
+                >
                   Affinity
                 </TabsTrigger>
               </TabsList>
@@ -429,7 +445,7 @@ export function EditModal({ item, index }: EditModalProps) {
                           if (updated) {
                             setEdited(JSON.parse(JSON.stringify(updated)));
                           }
-                          setOpen(false);
+                          onClose();
                           toast("Changes discarded.");
                         }}
                       >
@@ -454,12 +470,12 @@ export function EditModal({ item, index }: EditModalProps) {
               <h3 className="font-semibold">Details</h3>
               <Separator />
               <div className="flex flex-row border p-3 gap-4 rounded h-full items-start">
-                <div className="flex border  overflow-hidden aspect-2/3 bg-black rounded-md">
+                <div className="flex border border-input overflow-hidden aspect-2/3 bg-black rounded-md">
                   <ItemImage
-                    index={index}
-                    alt={`Item ${index}`}
+                    index={item.bit}
+                    alt={edited.name}
                     width={106}
-                    height={106}
+                    height={160}
                   />
                 </div>
                 <div className="flex flex-col gap-4">

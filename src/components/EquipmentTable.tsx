@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { parseRawData } from "@/lib/parseRawData";
 import { initEquipmentData, getEquipmentData } from "@/lib/localStorage";
-import { DataTable } from "./data-table";
+import { DataTable } from "@/components/DataTable";
 import type { EquipmentItem } from "@/typings/types";
 
 export default function EquipmentTable() {

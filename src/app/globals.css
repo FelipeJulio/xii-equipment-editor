@@ -134,11 +134,15 @@ header {
   background-color: var(--header);
 }
 
-body[data-scroll-locked="1"] header {
-  padding-right: 15px;
-}
-
 [data-slot="dialog-overlay"] {
   --tw-backdrop-blur: blur(var(--blur-md));
   backdrop-filter: var(--tw-backdrop-blur);
+}
+
+body[data-scroll-locked] {
+  margin-right: unset !important;
+}
+
+header {
+  padding-right: var(--removed-body-scroll-bar-size, 0);
 }
