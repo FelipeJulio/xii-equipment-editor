@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import type {
   EquipmentItem,
@@ -18,23 +19,31 @@ import { EditButton } from "@/components/EditButton";
 import ItemImage from "@/components/ItemImage";
 import GameIcon from "@/components/GameIcon";
 
-const getSigilColor = (level: number): string => {
-  if (level >= 12) {
-    return "#fd4336";
-  } else if (level >= 11) {
-    return "#ffa825";
-  } else if (level >= 9) {
-    return "#784bff";
-  } else if (level >= 6) {
-    return "#339dff";
-  } else if (level >= 3) {
-    return "#4ac24a";
-  } else {
-    return "";
-  }
-};
+export function getColumns(
+  level: number,
+  getSigilColor: (level: number) => string
+): ColumnDef<EquipmentItem>[] {
+  const renderStatusEntries = (entries: StatusEntry[]): React.ReactNode => {
+    if (!entries || entries.length === 0) return "-";
 
-export function getColumns(level: number): ColumnDef<EquipmentItem>[] {
+    return React.createElement(
+      "div",
+      { className: "flex flex-wrap gap-2 items-center" },
+      entries.map((s, i) =>
+        React.createElement(
+          "div",
+          { key: i, className: "flex items-center gap-1" },
+          React.createElement(GameIcon, {
+            type: "status",
+            name: s.name,
+            size: 16,
+          }),
+          React.createElement("span", null, statusLabels[s.name])
+        )
+      )
+    );
+  };
+
   return [
     {
       id: "image",
@@ -113,62 +122,20 @@ export function getColumns(level: number): ColumnDef<EquipmentItem>[] {
     {
       id: "onhit",
       header: "On-Hit",
-      cell: ({ row }) => {
-        const entries: StatusEntry[] = row.original.onhit[level - 1] || [];
-        if (entries.length === 0) {
-          return "-";
-        }
-        return (
-          <div className="flex flex-wrap gap-2 items-center">
-            {entries.map((s, i) => (
-              <div key={i} className="flex items-center gap-1">
-                <GameIcon type="status" name={s.name} size={16} />
-                <span>{statusLabels[s.name]}</span>
-              </div>
-            ))}
-          </div>
-        );
-      },
+      cell: ({ row }) =>
+        renderStatusEntries(row.original.onhit[level - 1] || []),
     },
     {
       id: "onequip",
       header: "On-Equip",
-      cell: ({ row }) => {
-        const entries: StatusEntry[] = row.original.onequip[level - 1] || [];
-        if (entries.length === 0) {
-          return "-";
-        }
-        return (
-          <div className="flex flex-wrap gap-2 items-center">
-            {entries.map((s, i) => (
-              <div key={i} className="flex items-center gap-1">
-                <GameIcon type="status" name={s.name} size={16} />
-                <span>{statusLabels[s.name]}</span>
-              </div>
-            ))}
-          </div>
-        );
-      },
+      cell: ({ row }) =>
+        renderStatusEntries(row.original.onhit[level - 1] || []),
     },
     {
       id: "immunity",
       header: "Immunity",
-      cell: ({ row }) => {
-        const entries: StatusEntry[] = row.original.immunity[level - 1] || [];
-        if (entries.length === 0) {
-          return "-";
-        }
-        return (
-          <div className="flex flex-wrap gap-2 items-center">
-            {entries.map((s, i) => (
-              <div key={i} className="flex items-center gap-1">
-                <GameIcon type="status" name={s.name} size={16} />
-                <span>{statusLabels[s.name]}</span>
-              </div>
-            ))}
-          </div>
-        );
-      },
+      cell: ({ row }) =>
+        renderStatusEntries(row.original.onhit[level - 1] || []),
     },
     {
       id: "affinity",
@@ -195,8 +162,8 @@ export function getColumns(level: number): ColumnDef<EquipmentItem>[] {
         const presentTypes = typeOrder.filter((t) => grouped[t]);
         return (
           <div className="flex flex-wrap gap-2 items-center">
-            {presentTypes.map((type, idx) => (
-              <div key={type} className="flex items-center gap-1">
+            {presentTypes.map((type) => (
+              <div key={type} className="flex items-center gap-1 flex-wrap">
                 <span className="font-semibold">
                   {affinityTypeLabels[type]}:
                 </span>
@@ -206,9 +173,6 @@ export function getColumns(level: number): ColumnDef<EquipmentItem>[] {
                     <span>{elementLabels[a.element]}</span>
                   </div>
                 ))}
-                {idx < presentTypes.length - 1 && (
-                  <span className="px-1">|</span>
-                )}
               </div>
             ))}
           </div>

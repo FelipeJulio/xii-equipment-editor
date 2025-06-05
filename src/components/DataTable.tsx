@@ -25,7 +25,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 
 import type {
   EquipmentItem,
@@ -46,6 +46,13 @@ import GameIcon from "@/components/GameIcon";
 
 interface DataTableProps<TData extends EquipmentItem> {
   data: TData[];
+}
+
+interface EquipmentWithFlattenedEffects extends EquipmentItem {
+  flatOnhit: StatusEntry[];
+  flatOnequip: StatusEntry[];
+  flatImmunity: StatusEntry[];
+  flatAffinity: AffinityEntry[];
 }
 
 export function DataTable<TData extends EquipmentItem>({
@@ -70,84 +77,79 @@ export function DataTable<TData extends EquipmentItem>({
     [data]
   );
 
+  const flattenedEffects = useMemo<EquipmentWithFlattenedEffects[]>(() => {
+    return data.map((item) => ({
+      ...item,
+      flatOnhit: item.onhit.flat(),
+      flatOnequip: item.onequip.flat(),
+      flatImmunity: item.immunity.flat(),
+      flatAffinity: item.affinity.flat(),
+    }));
+  }, [data]);
+
   const filteredData = useMemo(
     () =>
-      data.filter((item) => {
-        if (
-          globalFilter &&
-          !Object.values(item)
-            .join(" ")
-            .toLowerCase()
-            .includes(globalFilter.toLowerCase())
-        ) {
+      flattenedEffects.filter((item) => {
+        const searchable = [item.name, item.license, item.category].join(" ");
+
+        if (!searchable.toLowerCase().includes(globalFilter.toLowerCase()))
           return false;
-        }
-        if (categoryFilter !== "all" && item.category !== categoryFilter) {
+        if (categoryFilter !== "all" && item.category !== categoryFilter)
           return false;
-        }
+
         if (
           elementFilter !== "all" &&
           !item.element.some((e: ElementEntry) => e.name === elementFilter)
-        ) {
+        )
           return false;
-        }
+
         if (
           onhitFilter !== "all" &&
-          !item.onhit.some((lvl: StatusEntry[]) =>
-            lvl.some((s) => s.name === onhitFilter)
-          )
-        ) {
+          !item.flatOnhit.some((s: StatusEntry) => s.name === onhitFilter)
+        )
           return false;
-        }
+
         if (
           onequipFilter !== "all" &&
-          !item.onequip.some((lvl: StatusEntry[]) =>
-            lvl.some((s) => s.name === onequipFilter)
-          )
-        ) {
+          !item.flatOnequip.some((s: StatusEntry) => s.name === onequipFilter)
+        )
           return false;
-        }
+
         if (
           immunityFilter !== "all" &&
-          !item.immunity.some((lvl: StatusEntry[]) =>
-            lvl.some((s) => s.name === immunityFilter)
-          )
-        ) {
+          !item.flatImmunity.some((s: StatusEntry) => s.name === immunityFilter)
+        )
           return false;
-        }
+
         if (affinityTypeFilter !== "all" && affinityElementFilter !== "all") {
           if (
-            !item.affinity.some((lvl: AffinityEntry[]) =>
-              lvl.some(
-                (a) =>
-                  a.type === affinityTypeFilter &&
-                  a.element === affinityElementFilter
-              )
+            !item.flatAffinity.some(
+              (a: AffinityEntry) =>
+                a.type === affinityTypeFilter &&
+                a.element === affinityElementFilter
             )
-          ) {
+          )
             return false;
-          }
         } else if (affinityTypeFilter !== "all") {
           if (
-            !item.affinity.some((lvl: AffinityEntry[]) =>
-              lvl.some((a) => a.type === affinityTypeFilter)
+            !item.flatAffinity.some(
+              (a: AffinityEntry) => a.type === affinityTypeFilter
             )
-          ) {
+          )
             return false;
-          }
         } else if (affinityElementFilter !== "all") {
           if (
-            !item.affinity.some((lvl: AffinityEntry[]) =>
-              lvl.some((a) => a.element === affinityElementFilter)
+            !item.flatAffinity.some(
+              (a: AffinityEntry) => a.element === affinityElementFilter
             )
-          ) {
+          )
             return false;
-          }
         }
+
         return true;
       }),
     [
-      data,
+      flattenedEffects,
       globalFilter,
       categoryFilter,
       elementFilter,
@@ -159,7 +161,26 @@ export function DataTable<TData extends EquipmentItem>({
     ]
   );
 
-  const columns = useMemo(() => getColumns(level), [level]);
+  const getSigilColor = useCallback((level: number): string => {
+    if (level >= 12) {
+      return "#fd4336";
+    } else if (level >= 11) {
+      return "#ffa825";
+    } else if (level >= 9) {
+      return "#784bff";
+    } else if (level >= 6) {
+      return "#339dff";
+    } else if (level >= 3) {
+      return "#4ac24a";
+    } else {
+      return "";
+    }
+  }, []);
+
+  const columns = useMemo(
+    () => getColumns(level, getSigilColor),
+    [level, getSigilColor]
+  );
 
   const table = useReactTable({
     data: filteredData,
@@ -174,22 +195,6 @@ export function DataTable<TData extends EquipmentItem>({
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
-
-  const getSigilColor = (level: number): string => {
-    if (level >= 12) {
-      return "#fd4336";
-    } else if (level >= 11) {
-      return "#ffa825";
-    } else if (level >= 9) {
-      return "#784bff";
-    } else if (level >= 6) {
-      return "#339dff";
-    } else if (level >= 3) {
-      return "#4ac24a";
-    } else {
-      return "";
-    }
-  };
 
   const { filterCount, isAnyFilterActive } = useMemo(() => {
     let count = 0;
@@ -441,7 +446,7 @@ export function DataTable<TData extends EquipmentItem>({
           </div>
         </div>
       </div>
-      <div className="rounded-md border flex min-h-[980px]">
+      <div className="rounded-md border flex">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((hg) => (
