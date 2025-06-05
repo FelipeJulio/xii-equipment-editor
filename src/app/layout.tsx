@@ -4,6 +4,8 @@ import { defaultFont } from "@/lib/font";
 import { Toaster } from "@/components/ui/sonner";
 import clsx from "clsx";
 import "./globals.css";
+import { AppWrapper } from "@/components/AppWrapper";
+import GameIcon from "@/components/GameIcon";
 
 export { metadata };
 
@@ -22,11 +24,24 @@ export default function RootLayout({
       <body
         className={clsx(
           defaultFont.variable,
-          "h-screen flex flex-col justify-center items-center"
+          "flex flex-col justify-center items-center overflow-y-scroll"
         )}
       >
-        {children}
+        <AppWrapper>{children}</AppWrapper>
         <Toaster />
+        <div className="flex flex-col justify-center gap-2 py-24">
+          <p className="flex justify-center gap-2">
+            Made by
+            <a
+              href="https://next.nexusmods.com/profile/fehdead?gameId=2304"
+              target="_blank"
+              className="underline underline-offset-4"
+            >
+              FehDead
+            </a>
+          </p>
+          <GameIcon type="ui" name="kupo" size={32} />
+        </div>
       </body>
     </html>
   );

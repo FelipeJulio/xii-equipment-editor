@@ -221,7 +221,7 @@ export function DataTable<TData extends EquipmentItem>({
 
   return (
     <div className="space-y-2">
-      <div className="flex flex-wrap gap-3 items-center py-4">
+      <div className="flex flex-wrap gap-3 items-center rounded-md border p-4">
         <div className="flex flex-col gap-1">
           <p className="text-sm font-medium">Search</p>
           <Input

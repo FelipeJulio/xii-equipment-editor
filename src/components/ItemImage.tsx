@@ -14,7 +14,7 @@ export default function ItemImage({
   index,
   alt = "Item Image",
   width = 32,
-  height = 32,
+  height = 48,
 }: ItemImageProps) {
   const basePath = "/xii-equipment-editor";
   const key = String(index).padStart(2, "0");

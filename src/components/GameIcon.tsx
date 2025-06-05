@@ -38,12 +38,7 @@ const normalize = (str: string): string => {
     .replace(/[^a-z0-9_]/g, "");
 };
 
-const GameIcon: React.FC<GameIconProps> = ({
-  type,
-  name,
-  size = 24,
-  className = "",
-}) => {
+const GameIcon: React.FC<GameIconProps> = ({ type, name, size = 24 }) => {
   const src = resolveIconPath(type, name);
 
   return (
@@ -52,7 +47,7 @@ const GameIcon: React.FC<GameIconProps> = ({
       alt={`${type}-${name}`}
       height={size}
       width={size}
-      className={className}
+      className="inline-flex aspect-square object-contain"
       style={{ height: size, width: "auto" }}
     />
   );
