@@ -16,8 +16,9 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
       "serviceWorker" in navigator &&
       window.location.hostname !== "localhost"
     ) {
+      const basePath = "/xii-equipment-editor";
       navigator.serviceWorker
-        .register("/sw.js")
+        .register(`${basePath}/sw.js`)
         .then(() => console.log("Service Worker registered"))
         .catch((err) => console.error("SW registration failed:", err));
     }
