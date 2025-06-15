@@ -1,3 +1,5 @@
+// Keys
+
 export type AttributeKey =
   | "rge"
   | "atk"
@@ -62,15 +64,17 @@ export type StatusKey =
 
 export type AffinityTypeKey = "absorb" | "immune" | "half" | "weak" | "potency";
 
+//Labels and Icons
+
 export const attributeLabels: Record<AttributeKey, string> = {
   rge: "Range",
-  atk: "Attack Power",
-  kb: "Knockback %",
-  cmb: "Combo/Critical %",
-  evas: "Evade",
-  evaw: "Evade",
+  atk: "Attack",
+  kb: "Knockback",
+  cmb: "Combo/Crit",
+  evas: "Evade (S)",
+  evaw: "Evade (W)",
   hit: "Hit-Rate",
-  crg: "Charge Time",
+  crg: "Charge",
   mres: "Magick Resist",
   def: "Defense",
   hp: "HP",
@@ -135,43 +139,6 @@ export const affinityTypeLabels: Record<AffinityTypeKey, string> = {
   potency: "Potency",
 };
 
-export interface AttributeEntry {
-  name: AttributeKey;
-  value: number;
-  scale: number[];
-}
-
-export interface ElementEntry {
-  name: "" | ElementKey;
-  icon: number;
-}
-
-export interface StatusEntry {
-  name: StatusKey;
-  icon: number;
-}
-
-export interface AffinityEntry {
-  type: AffinityTypeKey;
-  element: ElementKey;
-  icon: number;
-}
-
-export interface EquipmentItem {
-  id: number;
-  bit: number;
-  name: string;
-  license: string;
-  category: string;
-  notes: string;
-  attr: Partial<Record<AttributeKey, { value: number; scale: number[] }>>;
-  element: ElementEntry[];
-  onhit: StatusEntry[][];
-  onequip: StatusEntry[][];
-  immunity: StatusEntry[][];
-  affinity: AffinityEntry[][];
-}
-
 export const elementIcons: Record<ElementKey, number> = {
   fire: 10,
   lightning: 11,
@@ -218,65 +185,169 @@ export const statusIcons: Record<StatusKey, number> = {
   x_zone: 32,
 };
 
-export const affinityIcons: Record<AffinityTypeKey, number> = {
-  absorb: 100,
-  immune: 101,
-  half: 102,
-  weak: 103,
-  potency: 104,
-};
+// Categories
+
+export type WeaponCategoryName =
+  | "Sword"
+  | "Greatsword"
+  | "Katana"
+  | "Ninja Sword"
+  | "Spear"
+  | "Pole"
+  | "Bow"
+  | "Crossbow"
+  | "Gun"
+  | "Axe"
+  | "Hammer"
+  | "Dagger"
+  | "Rod"
+  | "Staff"
+  | "Mace"
+  | "Measure"
+  | "Hand-Bomb"
+  | "Unarmed"
+  | "Unused";
+
+export type ShieldCategoryName = "Shield";
+
+export type ArmorCategoryName =
+  | "Light Helm"
+  | "Mystic Helm"
+  | "Heavy Helm"
+  | "Light Armor"
+  | "Mystic Armor"
+  | "Heavy Armor"
+  | "Ring"
+  | "Armlet"
+  | "Glove"
+  | "Gorget"
+  | "Pendant"
+  | "Belt"
+  | "Boot"
+  | "Nethecite"
+  | "Ribbon"
+  | "Shard";
+
+export type AmmunitionCategoryName = "Arrow" | "Bolt" | "Shot" | "Bomb";
+
+export type CategoryName =
+  | WeaponCategoryName
+  | ShieldCategoryName
+  | ArmorCategoryName
+  | AmmunitionCategoryName;
+
+// Models
+
+export interface AttributeEntry {
+  name: AttributeKey;
+  value: number;
+  scale: number[];
+}
+
+export interface ElementEntry {
+  name: "" | ElementKey;
+  icon: number;
+}
+
+export interface StatusEntry {
+  name: StatusKey;
+  icon: number;
+}
+
+export interface AffinityEntry {
+  type: AffinityTypeKey;
+  element: ElementKey;
+  icon: number;
+}
+
+export interface EquipmentItem {
+  id: number;
+  bit: number;
+  name: string;
+  license: string;
+  category: CategoryName;
+  notes: string;
+
+  attr: Partial<Record<AttributeKey, { value: number; scale: number[] }>>;
+
+  element: ElementEntry[];
+  onhit: StatusEntry[][];
+  onequip: StatusEntry[][];
+  immunity: StatusEntry[][];
+  affinity: AffinityEntry[][];
+}
+
+// Icon Map
 
 export type IconType =
   | "elements"
   | "status"
-  | "affinity"
+  | "weapons"
+  | "protectives"
   | "accessories"
   | "ammunitions"
-  | "protectives"
-  | "weapons"
   | "ui";
 
-export const categoryToIconTypeMap: Record<string, IconType> = {
-  sword: "weapons",
-  greatsword: "weapons",
-  dagger: "weapons",
-  katana: "weapons",
-  bow: "weapons",
-  gun: "weapons",
-  crossbow: "weapons",
-  pole: "weapons",
-  rod: "weapons",
-  stave: "weapons",
-  axe: "weapons",
-  hammer: "weapons",
-  mace: "weapons",
-  measure: "weapons",
-  ninja_sword: "weapons",
-  hand_bomb: "weapons",
-  spear: "weapons",
+export const categoryToIconType: Record<CategoryName, IconType> = {
+  // Weapons
+  Sword: "weapons",
+  Greatsword: "weapons",
+  Katana: "weapons",
+  "Ninja Sword": "weapons",
+  Spear: "weapons",
+  Pole: "weapons",
+  Bow: "weapons",
+  Crossbow: "weapons",
+  Gun: "weapons",
+  Axe: "weapons",
+  Hammer: "weapons",
+  Dagger: "weapons",
+  Rod: "weapons",
+  Staff: "weapons",
+  Mace: "weapons",
+  Measure: "weapons",
+  "Hand-Bomb": "weapons",
+  Unarmed: "weapons",
+  Unused: "weapons",
 
-  heavy_armor: "protectives",
-  light_armor: "protectives",
-  mystic_armor: "protectives",
-  heavy_helm: "protectives",
-  light_helm: "protectives",
-  mystic_helm: "protectives",
-  shield: "protectives",
+  // Shield
+  Shield: "protectives",
 
-  ring: "accessories",
-  belt: "accessories",
-  armlet: "accessories",
-  glove: "accessories",
-  gorget: "accessories",
-  pendant: "accessories",
-  boot: "accessories",
-  ribbon: "accessories",
-  shard: "accessories",
-  magicite: "accessories",
-  nethecite: "accessories",
+  // Armor
+  "Light Helm": "protectives",
+  "Mystic Helm": "protectives",
+  "Heavy Helm": "protectives",
+  "Light Armor": "protectives",
+  "Mystic Armor": "protectives",
+  "Heavy Armor": "protectives",
 
-  arrow: "ammunitions",
-  bolt: "ammunitions",
-  shot: "ammunitions",
-  bomb: "ammunitions",
+  // Accessories
+  Ring: "accessories",
+  Armlet: "accessories",
+  Glove: "accessories",
+  Gorget: "accessories",
+  Pendant: "accessories",
+  Belt: "accessories",
+  Boot: "accessories",
+  Nethecite: "accessories",
+  Ribbon: "accessories",
+  Shard: "accessories",
+
+  // Ammunition
+  Arrow: "ammunitions",
+  Bolt: "ammunitions",
+  Shot: "ammunitions",
+  Bomb: "ammunitions",
 };
+
+// Utils
+
+export function safeArray<T>(
+  arr: T[] | undefined,
+  filler: T,
+  length = 12
+): T[] {
+  const base = Array.isArray(arr) ? arr : [];
+  const missing = Math.max(0, length - base.length);
+  return [...base, ...Array.from({ length: missing }, () => filler)];
+}

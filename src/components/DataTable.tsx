@@ -48,13 +48,6 @@ interface DataTableProps<TData extends EquipmentItem> {
   data: TData[];
 }
 
-interface EquipmentWithFlattenedEffects extends EquipmentItem {
-  flatOnhit: StatusEntry[];
-  flatOnequip: StatusEntry[];
-  flatImmunity: StatusEntry[];
-  flatAffinity: AffinityEntry[];
-}
-
 export function DataTable<TData extends EquipmentItem>({
   data,
 }: DataTableProps<TData>) {
@@ -77,53 +70,54 @@ export function DataTable<TData extends EquipmentItem>({
     [data]
   );
 
-  const flattenedEffects = useMemo<EquipmentWithFlattenedEffects[]>(() => {
-    return data.map((item) => ({
-      ...item,
-      flatOnhit: item.onhit.flat(),
-      flatOnequip: item.onequip.flat(),
-      flatImmunity: item.immunity.flat(),
-      flatAffinity: item.affinity.flat(),
-    }));
-  }, [data]);
-
   const filteredData = useMemo(
     () =>
-      flattenedEffects.filter((item) => {
+      data.filter((item) => {
         const searchable = [item.name, item.license, item.category].join(" ");
 
         if (!searchable.toLowerCase().includes(globalFilter.toLowerCase()))
           return false;
+
         if (categoryFilter !== "all" && item.category !== categoryFilter)
           return false;
 
         if (
           elementFilter !== "all" &&
-          !item.element.some((e: ElementEntry) => e.name === elementFilter)
+          ![item.element[level - 1]].some(
+            (e: ElementEntry | undefined) => e?.name === elementFilter
+          )
         )
           return false;
 
         if (
           onhitFilter !== "all" &&
-          !item.flatOnhit.some((s: StatusEntry) => s.name === onhitFilter)
+          !item.onhit[level - 1].some(
+            (s: StatusEntry) => s.name === onhitFilter
+          )
         )
           return false;
 
         if (
           onequipFilter !== "all" &&
-          !item.flatOnequip.some((s: StatusEntry) => s.name === onequipFilter)
+          !item.onequip[level - 1].some(
+            (s: StatusEntry) => s.name === onequipFilter
+          )
         )
           return false;
 
         if (
           immunityFilter !== "all" &&
-          !item.flatImmunity.some((s: StatusEntry) => s.name === immunityFilter)
+          !item.immunity[level - 1].some(
+            (s: StatusEntry) => s.name === immunityFilter
+          )
         )
           return false;
 
+        const affinities = item.affinity[level - 1];
+
         if (affinityTypeFilter !== "all" && affinityElementFilter !== "all") {
           if (
-            !item.flatAffinity.some(
+            !affinities.some(
               (a: AffinityEntry) =>
                 a.type === affinityTypeFilter &&
                 a.element === affinityElementFilter
@@ -132,14 +126,14 @@ export function DataTable<TData extends EquipmentItem>({
             return false;
         } else if (affinityTypeFilter !== "all") {
           if (
-            !item.flatAffinity.some(
+            !affinities.some(
               (a: AffinityEntry) => a.type === affinityTypeFilter
             )
           )
             return false;
         } else if (affinityElementFilter !== "all") {
           if (
-            !item.flatAffinity.some(
+            !affinities.some(
               (a: AffinityEntry) => a.element === affinityElementFilter
             )
           )
@@ -149,7 +143,7 @@ export function DataTable<TData extends EquipmentItem>({
         return true;
       }),
     [
-      flattenedEffects,
+      data,
       globalFilter,
       categoryFilter,
       elementFilter,
@@ -158,6 +152,7 @@ export function DataTable<TData extends EquipmentItem>({
       immunityFilter,
       affinityTypeFilter,
       affinityElementFilter,
+      level,
     ]
   );
 

@@ -1,9 +1,9 @@
 import Image from "next/image";
 import React from "react";
-import { categoryToIconTypeMap, type IconType } from "@/typings/types";
+import { categoryToIconType, type IconType } from "@/typings/types";
 
 interface GameIconProps {
-  type: IconType;
+  type: IconType | "affinity";
   name: string;
   size?: number;
   className?: string;
@@ -11,23 +11,27 @@ interface GameIconProps {
 
 const basePath = "/xii-equipment-editor";
 
-const resolveIconPath = (type: IconType, name: string): string => {
-  const n = normalize(name);
+const aliasType = (type: IconType | "affinity"): IconType => {
+  return type === "affinity" ? "status" : type;
+};
 
-  if (type === "ui") {
+const resolveIconPath = (type: IconType | "affinity", name: string): string => {
+  const n = normalize(name);
+  const resolvedType = aliasType(type);
+
+  if (resolvedType === "ui") {
     return `${basePath}/assets/ui/${n}.png`;
   }
-  if (type === "status") {
+  if (resolvedType === "status") {
     return `${basePath}/assets/status/${n}.png`;
   }
-  if (type === "elements") {
+  if (resolvedType === "elements") {
     return `${basePath}/assets/elements/${n}.png`;
   }
-  if (type === "affinity") {
-    return `${basePath}/assets/status/${n}.png`;
-  }
 
-  const mappedType = categoryToIconTypeMap[n] || type;
+  const mappedType =
+    (categoryToIconType as Record<string, IconType>)[name] ?? resolvedType;
+
   return `${basePath}/assets/equipments/${mappedType}/${n}.png`;
 };
 
@@ -38,7 +42,12 @@ const normalize = (str: string): string => {
     .replace(/[^a-z0-9_]/g, "");
 };
 
-const GameIcon: React.FC<GameIconProps> = ({ type, name, size = 24 }) => {
+const GameIcon: React.FC<GameIconProps> = ({
+  type,
+  name,
+  size = 24,
+  className,
+}) => {
   const src = resolveIconPath(type, name);
 
   return (
@@ -47,7 +56,7 @@ const GameIcon: React.FC<GameIconProps> = ({ type, name, size = 24 }) => {
       alt={`${type}-${name}`}
       height={size}
       width={size}
-      className="inline-flex aspect-square object-contain"
+      className={`inline-flex aspect-square object-contain ${className ?? ""}`}
       style={{ height: size, width: "auto" }}
     />
   );

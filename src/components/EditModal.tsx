@@ -47,6 +47,11 @@ import type {
   ElementKey,
   StatusKey,
   AffinityTypeKey,
+  AmmunitionCategoryName,
+  WeaponCategoryName,
+  ShieldCategoryName,
+  ArmorCategoryName,
+  CategoryName,
 } from "@/typings/types";
 
 import {
@@ -56,7 +61,6 @@ import {
   attributeLabels,
   elementIcons,
   statusIcons,
-  affinityIcons,
 } from "@/typings/types";
 
 import { GenerateAttribute } from "@/components/GenerateAttribute";
@@ -71,23 +75,57 @@ interface EditModalProps {
 }
 
 export function EditModalContent({ item, onClose }: EditModalProps) {
-  const [edited, setEdited] = useState<EquipmentItem>(() => {
-    return JSON.parse(JSON.stringify(item));
-  });
+  function normalizeItem(item: EquipmentItem): EquipmentItem {
+    return {
+      ...item,
+      onhit:
+        Array.isArray(item.onhit) && item.onhit.length === 12
+          ? item.onhit
+          : Array.from({ length: 12 }, () => []),
+      onequip:
+        Array.isArray(item.onequip) && item.onequip.length === 12
+          ? item.onequip
+          : Array.from({ length: 12 }, () => []),
+      immunity:
+        Array.isArray(item.immunity) && item.immunity.length === 12
+          ? item.immunity
+          : Array.from({ length: 12 }, () => []),
+      affinity:
+        Array.isArray(item.affinity) && item.affinity.length === 12
+          ? item.affinity
+          : Array.from({ length: 12 }, () => []),
+      element:
+        Array.isArray(item.element) && item.element.length === 12
+          ? item.element
+          : Array.from({ length: 12 }, () => ({
+              name: "" as ElementKey,
+              icon: 0,
+            })),
+    };
+  }
+
+  const [original, setOriginal] = useState<EquipmentItem>(() =>
+    normalizeItem(JSON.parse(JSON.stringify(item)))
+  );
+  const [edited, setEdited] = useState<EquipmentItem>(() =>
+    normalizeItem(JSON.parse(JSON.stringify(item)))
+  );
 
   const [isEditedDirty, setIsEditedDirty] = useState(false);
   const [openedAttrKey, setOpenedAttrKey] = useState<AttributeKey | null>(null);
 
   useEffect(() => {
-    setEdited(JSON.parse(JSON.stringify(item)));
+    const normalized = normalizeItem(JSON.parse(JSON.stringify(item)));
+    setOriginal(normalized);
+    setEdited(normalized);
   }, [item]);
 
   useEffect(() => {
-    const isEqual = JSON.stringify(item) === JSON.stringify(edited);
+    const isEqual = JSON.stringify(original) === JSON.stringify(edited);
     setIsEditedDirty(!isEqual);
-  }, [edited, item]);
+  }, [edited, original]);
 
-  const attributeKeys = Object.keys(attributeLabels) as AttributeKey[];
+  // const attributeKeys = Object.keys(attributeLabels) as AttributeKey[];
   const handleAttrScaleChange = (
     key: AttributeKey,
     level: number,
@@ -237,7 +275,7 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
           {
             type: chosen.type,
             element: chosen.element,
-            icon: affinityIcons[chosen.type] ?? 0,
+            icon: elementIcons[chosen.element] ?? 0,
           },
         ];
       });
@@ -274,10 +312,10 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
 
         if (field === "type") {
           entry.type = val as AffinityTypeKey;
-          entry.icon = affinityIcons[entry.type] ?? 0;
         } else {
           entry.element = val as ElementKey;
         }
+        entry.icon = elementIcons[entry.element] ?? 0;
         copy[idx] = entry;
         return copy;
       });
@@ -344,6 +382,118 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
     });
   };
 
+  const weaponCategories: WeaponCategoryName[] = [
+    "Sword",
+    "Greatsword",
+    "Katana",
+    "Ninja Sword",
+    "Spear",
+    "Pole",
+    "Bow",
+    "Crossbow",
+    "Gun",
+    "Axe",
+    "Hammer",
+    "Dagger",
+    "Rod",
+    "Staff",
+    "Mace",
+    "Measure",
+    "Hand-Bomb",
+    "Unarmed",
+    "Unused",
+  ];
+
+  const shieldCategories: ShieldCategoryName[] = ["Shield"];
+
+  const armorCategories: ArmorCategoryName[] = [
+    "Light Helm",
+    "Mystic Helm",
+    "Heavy Helm",
+    "Light Armor",
+    "Mystic Armor",
+    "Heavy Armor",
+    "Ring",
+    "Armlet",
+    "Glove",
+    "Gorget",
+    "Pendant",
+    "Belt",
+    "Boot",
+    "Nethecite",
+    "Ribbon",
+    "Shard",
+  ];
+
+  const ammoCategories: AmmunitionCategoryName[] = [
+    "Arrow",
+    "Bolt",
+    "Shot",
+    "Bomb",
+  ];
+
+  const getCategoryType = (category: string) => {
+    if (weaponCategories.includes(category as WeaponCategoryName))
+      return "weapon";
+    if (shieldCategories.includes(category as ShieldCategoryName))
+      return "shield";
+    if (armorCategories.includes(category as ArmorCategoryName)) return "armor";
+    if (ammoCategories.includes(category as AmmunitionCategoryName))
+      return "ammo";
+    return null;
+  };
+
+  const getValidAttributes = (category: string): AttributeKey[] => {
+    const type = getCategoryType(category);
+    if (type === "weapon") {
+      return [
+        "rge",
+        "atk",
+        "kb",
+        "cmb",
+        "evaw",
+        "hit",
+        "crg",
+        "hp",
+        "mp",
+        "str",
+        "mgk",
+        "vit",
+        "spd",
+      ];
+    }
+    if (type === "shield") {
+      return ["evas", "mres", "hp", "mp", "str", "mgk", "vit", "spd"];
+    }
+    if (type === "armor") {
+      return ["def", "mres", "hp", "mp", "str", "mgk", "vit", "spd"];
+    }
+    if (type === "ammo") {
+      return ["atk", "evaw", "hit", "hp", "mp", "str", "mgk", "vit", "spd"];
+    }
+    return [];
+  };
+
+  const supportsOnHit = (category: string) => {
+    const type = getCategoryType(category);
+    return type === "weapon" || type === "ammo";
+  };
+
+  const supportsOnEquip = (category: string) => {
+    const type = getCategoryType(category);
+    return type === "shield" || type === "armor";
+  };
+
+  const supportsImmunity = (category: string) => {
+    const type = getCategoryType(category);
+    return type === "shield" || type === "armor";
+  };
+
+  const supportsAffinity = (category: string) => {
+    const type = getCategoryType(category);
+    return type === "weapon" || type === "shield" || type === "armor";
+  };
+
   return (
     <Dialog
       open={true}
@@ -375,42 +525,52 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                 >
                   Details
                 </TabsTrigger>
-                <TabsTrigger
-                  value="attributes"
-                  className="cursor-pointer hover:opacity-90"
-                >
-                  Attributes
-                </TabsTrigger>
+                {getValidAttributes(edited.category).length > 0 && (
+                  <TabsTrigger
+                    value="attributes"
+                    className="cursor-pointer hover:opacity-90"
+                  >
+                    Attributes
+                  </TabsTrigger>
+                )}
                 <TabsTrigger
                   value="elements"
                   className="cursor-pointer hover:opacity-90"
                 >
                   Elements
                 </TabsTrigger>
-                <TabsTrigger
-                  value="onhit"
-                  className="cursor-pointer hover:opacity-90"
-                >
-                  On-Hit
-                </TabsTrigger>
-                <TabsTrigger
-                  value="onequip"
-                  className="cursor-pointer hover:opacity-90"
-                >
-                  On-Equip
-                </TabsTrigger>
-                <TabsTrigger
-                  value="immunity"
-                  className="cursor-pointer hover:opacity-90"
-                >
-                  Immunity
-                </TabsTrigger>
-                <TabsTrigger
-                  value="affinity"
-                  className="cursor-pointer hover:opacity-90"
-                >
-                  Affinity
-                </TabsTrigger>
+                {supportsOnHit(edited.category) && (
+                  <TabsTrigger
+                    value="onhit"
+                    className="cursor-pointer hover:opacity-90"
+                  >
+                    On-Hit
+                  </TabsTrigger>
+                )}
+                {supportsOnEquip(edited.category) && (
+                  <TabsTrigger
+                    value="onequip"
+                    className="cursor-pointer hover:opacity-90"
+                  >
+                    On-Equip
+                  </TabsTrigger>
+                )}
+                {supportsImmunity(edited.category) && (
+                  <TabsTrigger
+                    value="immunity"
+                    className="cursor-pointer hover:opacity-90"
+                  >
+                    Immunity
+                  </TabsTrigger>
+                )}
+                {supportsAffinity(edited.category) && (
+                  <TabsTrigger
+                    value="affinity"
+                    className="cursor-pointer hover:opacity-90"
+                  >
+                    Affinity
+                  </TabsTrigger>
+                )}
               </TabsList>
               <div className="flex gap-2">
                 <AlertDialog>
@@ -510,17 +670,49 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                     </div>
                     <div className="flex flex-col gap-2">
                       <Label htmlFor="category">Category</Label>
-                      <Input
-                        id="category"
-                        disabled
+                      <Select
                         value={edited.category}
-                        onChange={(e) =>
+                        onValueChange={(value) =>
                           setEdited((prev) => ({
                             ...prev,
-                            category: e.target.value,
+                            category: value as CategoryName,
                           }))
                         }
-                      />
+                      >
+                        <SelectTrigger className="cursor-pointer">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="max-h-96">
+                          <optgroup label="Weapons">
+                            {weaponCategories.map((cat) => (
+                              <SelectItem key={cat} value={cat}>
+                                {cat}
+                              </SelectItem>
+                            ))}
+                          </optgroup>
+                          <optgroup label="Shields">
+                            {shieldCategories.map((cat) => (
+                              <SelectItem key={cat} value={cat}>
+                                {cat}
+                              </SelectItem>
+                            ))}
+                          </optgroup>
+                          <optgroup label="Armors & Accessories">
+                            {armorCategories.map((cat) => (
+                              <SelectItem key={cat} value={cat}>
+                                {cat}
+                              </SelectItem>
+                            ))}
+                          </optgroup>
+                          <optgroup label="Ammunition">
+                            {ammoCategories.map((cat) => (
+                              <SelectItem key={cat} value={cat}>
+                                {cat}
+                              </SelectItem>
+                            ))}
+                          </optgroup>
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
                   <div className="flex flex-col gap-2">
@@ -549,7 +741,7 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
             <TabsContent value="attributes" className="flex flex-col gap-2">
               <h3 className="font-semibold">Attributes</h3>
               <Separator />
-              {attributeKeys.map((key) => {
+              {getValidAttributes(edited.category).map((key) => {
                 const entry = edited.attr[key] || {
                   value: 0,
                   scale: Array(12).fill(0),

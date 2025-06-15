@@ -23,6 +23,12 @@ export function getColumns(
   level: number,
   getSigilColor: (level: number) => string
 ): ColumnDef<EquipmentItem>[] {
+  function safeArray<T>(arr: T[] | undefined, fallback: T): T[] {
+    const base = Array.isArray(arr) ? arr : [];
+    const missing = Math.max(0, 12 - base.length);
+    return [...base, ...Array.from({ length: missing }, () => fallback)];
+  }
+
   const renderStatusEntries = (entries: StatusEntry[]): React.ReactNode => {
     if (!entries || entries.length === 0) return "-";
 
@@ -122,26 +128,34 @@ export function getColumns(
     {
       id: "onhit",
       header: "On-Hit",
-      cell: ({ row }) =>
-        renderStatusEntries(row.original.onhit[level - 1] || []),
+      cell: ({ row }) => {
+        const onhit = safeArray(row.original.onhit, []);
+        return renderStatusEntries(onhit[level - 1] || []);
+      },
     },
     {
       id: "onequip",
       header: "On-Equip",
-      cell: ({ row }) =>
-        renderStatusEntries(row.original.onhit[level - 1] || []),
+      cell: ({ row }) => {
+        const onequip = safeArray(row.original.onequip, []);
+        return renderStatusEntries(onequip[level - 1] || []);
+      },
     },
     {
       id: "immunity",
       header: "Immunity",
-      cell: ({ row }) =>
-        renderStatusEntries(row.original.onhit[level - 1] || []),
+      cell: ({ row }) => {
+        const immunity = safeArray(row.original.immunity, []);
+        return renderStatusEntries(immunity[level - 1] || []);
+      },
     },
+
     {
       id: "affinity",
       header: "Affinity",
       cell: ({ row }) => {
-        const entries: AffinityEntry[] = row.original.affinity[level - 1] || [];
+        const affinity = safeArray(row.original.affinity, []);
+        const entries: AffinityEntry[] = affinity[level - 1] || [];
         if (entries.length === 0) {
           return "-";
         }

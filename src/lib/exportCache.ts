@@ -7,16 +7,13 @@ export function exportCache(value: unknown, indent = 2): string {
 
   const space = (lvl: number) => " ".repeat(lvl * indent);
 
-  const ignoredKeys = new Set([
-    "id",
-    "name",
-    "license",
-    "category",
-    "type",
-    "notes",
-  ]);
+  const ignoredKeys = new Set(["name", "license", "category", "notes"]);
 
-  const serialize = (val: unknown, lvl = 0): string => {
+  const serialize = (
+    val: unknown,
+    lvl = 0,
+    parentKey: string | null = null
+  ): string => {
     const pad = space(lvl);
     const padNext = space(lvl + 1);
 
@@ -27,20 +24,24 @@ export function exportCache(value: unknown, indent = 2): string {
 
     if (Array.isArray(val)) {
       if (val.length === 0) return "{}";
-      return `{\n${val
-        .map((v) => `${padNext}${serialize(v, lvl + 1)}`)
-        .join(",\n")}\n${pad}}`;
+      const serialized = val.map((v, i) => {
+        return `${padNext}[${i}] = ${serialize(v, lvl + 1, parentKey)}`;
+      });
+      return `{\n${serialized.join(",\n")}\n${pad}}`;
     }
 
     if (typeof val === "object") {
-      const entries = Object.entries(val).filter(
-        ([key]) => !ignoredKeys.has(key)
-      );
+      let entries = Object.entries(val);
+
+      if (lvl === 1 && parentKey === null) {
+        entries = entries.filter(([key]) => !ignoredKeys.has(key));
+      }
+
       if (entries.length === 0) return "{}";
       return `{\n${entries
         .map(([key, v]) => {
           const safeKey = isValidLuaKey(key) ? key : `["${key}"]`;
-          return `${padNext}${safeKey} = ${serialize(v, lvl + 1)}`;
+          return `${padNext}${safeKey} = ${serialize(v, lvl + 1, key)}`;
         })
         .join(",\n")}\n${pad}}`;
     }
