@@ -89,7 +89,7 @@ export function parseRawData(): EquipmentItem[] {
             name: el.name as ElementKey,
             icon: elementIcons[el.name as ElementKey] ?? 0,
           }
-        : { name: "" as ElementKey, icon: 0 };
+        : {};
     });
 
     const parseStatusArray = (

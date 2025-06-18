@@ -21,7 +21,8 @@ import GameIcon from "@/components/GameIcon";
 
 export function getColumns(
   level: number,
-  getSigilColor: (level: number) => string
+  getSigilColor: (level: number) => string,
+  onDataRefresh: () => void
 ): ColumnDef<EquipmentItem>[] {
   function safeArray<T>(arr: T[] | undefined, fallback: T): T[] {
     const base = Array.isArray(arr) ? arr : [];
@@ -59,7 +60,7 @@ export function getColumns(
         const bit = row.original.bit;
         const name = row.getValue("name") as string;
         return (
-          <div className="flex justify-center">
+          <div className="flex justify-center w-[34px]">
             <div className="border rounded overflow-hidden bg-black">
               <ItemImage index={bit} alt={name} width={32} height={48} />
             </div>
@@ -113,13 +114,19 @@ export function getColumns(
       id: "element",
       header: "Elements",
       cell: ({ row }) => {
-        const entry: ElementEntry | undefined = row.original.element[level - 1];
-        if (!entry || entry.name === "") {
+        const entry = row.original.element[level - 1] as ElementEntry;
+
+        if (!entry || !entry.name) {
           return "-";
         }
+
         return (
           <div className="flex items-center gap-1">
-            <GameIcon type="elements" name={entry.name} size={16} />
+            <GameIcon
+              type="elements"
+              name={entry.name as ElementKey}
+              size={16}
+            />
             <span>{elementLabels[entry.name as ElementKey] || "-"}</span>
           </div>
         );
@@ -198,7 +205,7 @@ export function getColumns(
       header: "Actions",
       cell: ({ row }) => {
         const item = row.original;
-        return <EditButton item={item} />;
+        return <EditButton item={item} onDataRefresh={onDataRefresh} />;
       },
     },
   ];

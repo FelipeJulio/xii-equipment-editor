@@ -46,10 +46,12 @@ import GameIcon from "@/components/GameIcon";
 
 interface DataTableProps<TData extends EquipmentItem> {
   data: TData[];
+  onDataRefresh: () => void;
 }
 
 export function DataTable<TData extends EquipmentItem>({
   data,
+  onDataRefresh,
 }: DataTableProps<TData>) {
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
@@ -73,7 +75,13 @@ export function DataTable<TData extends EquipmentItem>({
   const filteredData = useMemo(
     () =>
       data.filter((item) => {
-        const searchable = [item.name, item.license, item.category].join(" ");
+        const searchable = [
+          item.name,
+          item.license,
+          item.category,
+          String(item.id),
+          String(item.bit),
+        ].join(" ");
 
         if (!searchable.toLowerCase().includes(globalFilter.toLowerCase()))
           return false;
@@ -172,10 +180,7 @@ export function DataTable<TData extends EquipmentItem>({
     }
   }, []);
 
-  const columns = useMemo(
-    () => getColumns(level, getSigilColor),
-    [level, getSigilColor]
-  );
+  const columns = getColumns(level, getSigilColor, onDataRefresh);
 
   const table = useReactTable({
     data: filteredData,
@@ -225,10 +230,10 @@ export function DataTable<TData extends EquipmentItem>({
         <div className="flex flex-col gap-1">
           <p className="text-sm font-medium">Search</p>
           <Input
-            placeholder="Name, License, Category..."
+            placeholder="Name, License, Category, ID"
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            className="w-100 max-w-[200px]"
+            className="w-100 max-w-[200px] text-sm"
           />
         </div>
         <div className="flex flex-col gap-1">
@@ -238,9 +243,15 @@ export function DataTable<TData extends EquipmentItem>({
               <SelectValue placeholder="Category" />
             </SelectTrigger>
             <SelectContent className="max-h-96">
-              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="all" className="text-sm">
+                All
+              </SelectItem>
               {categories.map((cat) => (
-                <SelectItem className="cursor-pointer" key={cat} value={cat}>
+                <SelectItem
+                  className="cursor-pointer text-sm"
+                  key={cat}
+                  value={cat}
+                >
                   <GameIcon type="weapons" name={cat} size={16} />
                   {cat}
                 </SelectItem>
@@ -255,9 +266,15 @@ export function DataTable<TData extends EquipmentItem>({
               <SelectValue placeholder="Element" />
             </SelectTrigger>
             <SelectContent className="max-h-96">
-              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="all" className="text-sm">
+                All
+              </SelectItem>
               {Object.entries(elementLabels).map(([key, label]) => (
-                <SelectItem className="cursor-pointer" key={key} value={key}>
+                <SelectItem
+                  className="cursor-pointer text-sm"
+                  key={key}
+                  value={key}
+                >
                   <GameIcon type="elements" name={label} size={16} />
                   {label}
                 </SelectItem>
@@ -272,9 +289,15 @@ export function DataTable<TData extends EquipmentItem>({
               <SelectValue placeholder="On-Hit" />
             </SelectTrigger>
             <SelectContent className="max-h-96">
-              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="all" className="text-sm">
+                All
+              </SelectItem>
               {Object.entries(statusLabels).map(([key, label]) => (
-                <SelectItem className="cursor-pointer" key={key} value={key}>
+                <SelectItem
+                  className="cursor-pointer text-sm"
+                  key={key}
+                  value={key}
+                >
                   <GameIcon type="status" name={label} size={16} />
                   {label}
                 </SelectItem>
@@ -289,9 +312,15 @@ export function DataTable<TData extends EquipmentItem>({
               <SelectValue placeholder="On-Equip" />
             </SelectTrigger>
             <SelectContent className="max-h-96">
-              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="all" className="text-sm">
+                All
+              </SelectItem>
               {Object.entries(statusLabels).map(([key, label]) => (
-                <SelectItem className="cursor-pointer" key={key} value={key}>
+                <SelectItem
+                  className="cursor-pointer text-sm"
+                  key={key}
+                  value={key}
+                >
                   <GameIcon type="status" name={label} size={16} />
                   {label}
                 </SelectItem>
@@ -306,9 +335,15 @@ export function DataTable<TData extends EquipmentItem>({
               <SelectValue placeholder="immunity" />
             </SelectTrigger>
             <SelectContent className="max-h-96">
-              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="all" className="text-sm">
+                All
+              </SelectItem>
               {Object.entries(statusLabels).map(([key, label]) => (
-                <SelectItem className="cursor-pointer" key={key} value={key}>
+                <SelectItem
+                  className="cursor-pointer text-sm"
+                  key={key}
+                  value={key}
+                >
                   <GameIcon type="status" name={label} size={16} />
                   {label}
                 </SelectItem>
@@ -330,9 +365,15 @@ export function DataTable<TData extends EquipmentItem>({
                 />
               </SelectTrigger>
               <SelectContent className="max-h-96">
-                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="all" className="text-sm">
+                  All
+                </SelectItem>
                 {Object.entries(affinityTypeLabels).map(([key, label]) => (
-                  <SelectItem className="cursor-pointer" key={key} value={key}>
+                  <SelectItem
+                    className="cursor-pointer text-sm"
+                    key={key}
+                    value={key}
+                  >
                     {label}
                   </SelectItem>
                 ))}
@@ -349,9 +390,15 @@ export function DataTable<TData extends EquipmentItem>({
                 />
               </SelectTrigger>
               <SelectContent className="max-h-96">
-                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="all" className="text-sm">
+                  All
+                </SelectItem>
                 {Object.entries(elementLabels).map(([key, label]) => (
-                  <SelectItem className="cursor-pointer" key={key} value={key}>
+                  <SelectItem
+                    className="cursor-pointer text-sm"
+                    key={key}
+                    value={key}
+                  >
                     <GameIcon type="elements" name={label} size={16} />
                     {label}
                   </SelectItem>

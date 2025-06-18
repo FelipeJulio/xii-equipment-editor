@@ -40,7 +40,7 @@ export default function RootLayout({
               FehDead
             </a>
           </p>
-          <GameIcon type="ui" name="kupo" size={32} />
+          <GameIcon type="ui" name="kupo" size={22} />
         </div>
       </body>
     </html>

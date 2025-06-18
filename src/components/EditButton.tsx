@@ -13,7 +13,13 @@ const EditModalContent = dynamic(
   }
 );
 
-export function EditButton({ item }: { item: EquipmentItem }) {
+export function EditButton({
+  item,
+  onDataRefresh,
+}: {
+  item: EquipmentItem;
+  onDataRefresh: () => void;
+}) {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -50,7 +56,17 @@ export function EditButton({ item }: { item: EquipmentItem }) {
         )}
       </Button>
 
-      {open && <EditModalContent item={item} onClose={() => setOpen(false)} />}
+      {open && (
+        <EditModalContent
+          item={item}
+          onClose={(shouldRefresh) => {
+            setOpen(false);
+            if (shouldRefresh) {
+              onDataRefresh();
+            }
+          }}
+        />
+      )}
     </>
   );
 }

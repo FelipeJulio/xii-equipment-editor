@@ -71,7 +71,7 @@ import ItemImage from "@/components/ItemImage";
 
 interface EditModalProps {
   item: EquipmentItem;
-  onClose: () => void;
+  onClose: (shouldRefresh?: boolean) => void;
 }
 
 export function EditModalContent({ item, onClose }: EditModalProps) {
@@ -341,7 +341,7 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
 
       element: edited.element
         .map((entry) => ({ ...entry }))
-        .sort((a, b) => a.name.localeCompare(b.name)),
+        .sort((a, b) => (a.name ?? "").localeCompare(b.name ?? "")),
 
       affinity: edited.affinity.map((lvl) =>
         [...lvl].sort((a, b) => {
@@ -363,7 +363,7 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
       toast.success("Item saved successfully", {
         description: `ID ${toSave.bit} (${toSave.name}) was updated.`,
       });
-      onClose();
+      onClose(true);
     } else {
       toast.error("Save failed", {
         description: "Something went wrong.",
@@ -683,34 +683,41 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent className="max-h-96">
-                          <optgroup label="Weapons">
-                            {weaponCategories.map((cat) => (
-                              <SelectItem key={cat} value={cat}>
-                                {cat}
-                              </SelectItem>
-                            ))}
-                          </optgroup>
-                          <optgroup label="Shields">
-                            {shieldCategories.map((cat) => (
-                              <SelectItem key={cat} value={cat}>
-                                {cat}
-                              </SelectItem>
-                            ))}
-                          </optgroup>
-                          <optgroup label="Armors & Accessories">
-                            {armorCategories.map((cat) => (
-                              <SelectItem key={cat} value={cat}>
-                                {cat}
-                              </SelectItem>
-                            ))}
-                          </optgroup>
-                          <optgroup label="Ammunition">
-                            {ammoCategories.map((cat) => (
-                              <SelectItem key={cat} value={cat}>
-                                {cat}
-                              </SelectItem>
-                            ))}
-                          </optgroup>
+                          <div className="px-2 py-1 text-xs text-muted-foreground">
+                            Weapons
+                          </div>
+                          {weaponCategories.map((cat) => (
+                            <SelectItem key={cat} value={cat}>
+                              {cat}
+                            </SelectItem>
+                          ))}
+
+                          <div className="px-2 py-1 text-xs text-muted-foreground">
+                            Shields
+                          </div>
+                          {shieldCategories.map((cat) => (
+                            <SelectItem key={cat} value={cat}>
+                              {cat}
+                            </SelectItem>
+                          ))}
+
+                          <div className="px-2 py-1 text-xs text-muted-foreground">
+                            Armors & Accessories
+                          </div>
+                          {armorCategories.map((cat) => (
+                            <SelectItem key={cat} value={cat}>
+                              {cat}
+                            </SelectItem>
+                          ))}
+
+                          <div className="px-2 py-1 text-xs text-muted-foreground">
+                            Ammunition
+                          </div>
+                          {ammoCategories.map((cat) => (
+                            <SelectItem key={cat} value={cat}>
+                              {cat}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </div>

@@ -9,6 +9,20 @@ export function exportCache(value: unknown, indent = 2): string {
 
   const ignoredKeys = new Set(["name", "license", "category", "notes"]);
 
+  const shouldIgnoreKey = (
+    key: string | null,
+    lvl: number,
+    parentKey: string | null
+  ): boolean => {
+    if (!key) return false;
+    if (key === "default") return true;
+    if (ignoredKeys.has(key)) {
+      if (key === "name" && !(lvl === 1 && parentKey === null)) return false;
+      return true;
+    }
+    return false;
+  };
+
   const serialize = (
     val: unknown,
     lvl = 0,
@@ -33,9 +47,9 @@ export function exportCache(value: unknown, indent = 2): string {
     if (typeof val === "object") {
       let entries = Object.entries(val);
 
-      if (lvl === 1 && parentKey === null) {
-        entries = entries.filter(([key]) => !ignoredKeys.has(key));
-      }
+      entries = entries.filter(
+        ([key]) => !shouldIgnoreKey(key, lvl, parentKey)
+      );
 
       if (entries.length === 0) return "{}";
       return `{\n${entries

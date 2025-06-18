@@ -244,10 +244,10 @@ export interface AttributeEntry {
   scale: number[];
 }
 
-export interface ElementEntry {
-  name: "" | ElementKey;
+export type ElementEntry = Partial<{
+  name: ElementKey | "";
   icon: number;
-}
+}>;
 
 export interface StatusEntry {
   name: StatusKey;
