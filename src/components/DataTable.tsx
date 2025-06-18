@@ -38,11 +38,10 @@ import {
   statusLabels,
   affinityTypeLabels,
 } from "@/typings/types";
-import { exportCache } from "@/lib/exportCache";
-import { getEquipmentData } from "@/lib/localStorage";
-import { Download, Meh, Trash2 } from "lucide-react";
+import { Meh, Trash2 } from "lucide-react";
 import { getColumns } from "@/components/EquipmentColumns";
 import GameIcon from "@/components/GameIcon";
+import { ExportDropdown } from "@/components/ExportDropdown";
 
 interface DataTableProps<TData extends EquipmentItem> {
   data: TData[];
@@ -464,28 +463,8 @@ export function DataTable<TData extends EquipmentItem>({
           </div>
         )}
         <div className="flex flex-col gap-1">
-          <p className="text-sm font-medium">Export</p>
-          <div className="flex flex-row gap-2">
-            <Button
-              variant="default"
-              className="cursor-pointer"
-              onClick={() => {
-                const lua = exportCache(getEquipmentData());
-                const blob = new Blob([lua], {
-                  type: "text/plain;charset=utf-8",
-                });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement("a");
-                a.href = url;
-                a.download = "cachedata.lua";
-                a.click();
-                URL.revokeObjectURL(url);
-              }}
-            >
-              Export
-              <Download />
-            </Button>
-          </div>
+          <p className="text-sm font-medium">Actions</p>
+          <ExportDropdown />
         </div>
       </div>
       <div className="rounded-md border flex">

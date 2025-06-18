@@ -326,6 +326,8 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
     const toSave: EquipmentItem = {
       ...edited,
 
+      element: [...edited.element],
+
       onhit: edited.onhit.map((lvl) =>
         [...lvl].sort((a, b) => a.name.localeCompare(b.name))
       ),
@@ -338,15 +340,10 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
         [...lvl].sort((a, b) => a.name.localeCompare(b.name))
       ),
 
-      element: edited.element
-        .map((entry) => ({ ...entry }))
-        .sort((a, b) => (a.name ?? "").localeCompare(b.name ?? "")),
-
       affinity: edited.affinity.map((lvl) =>
         [...lvl].sort((a, b) => {
           const cmpType = a.type.localeCompare(b.type);
-          if (cmpType !== 0) return cmpType;
-          return a.element.localeCompare(b.element);
+          return cmpType !== 0 ? cmpType : a.element.localeCompare(b.element);
         })
       ),
     };
