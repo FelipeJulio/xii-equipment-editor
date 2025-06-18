@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectTrigger,
@@ -51,7 +50,6 @@ import type {
   WeaponCategoryName,
   ShieldCategoryName,
   ArmorCategoryName,
-  CategoryName,
 } from "@/typings/types";
 
 import {
@@ -68,6 +66,7 @@ import GameIcon from "@/components/GameIcon";
 
 import { getEquipmentData, saveEquipmentData } from "@/lib/localStorage";
 import ItemImage from "@/components/ItemImage";
+import { Badge } from "./ui/badge";
 
 interface EditModalProps {
   item: EquipmentItem;
@@ -511,38 +510,40 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
     >
       <DialogContent className="flex flex-col h-full max-h-[80vh] w-full sm:max-w-[1160px] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{edited.name}</DialogTitle>
+          <DialogTitle>
+            {edited.name} <Badge className="font-bold">{edited.category}</Badge>
+          </DialogTitle>
           <DialogDescription>ID {edited.bit}</DialogDescription>
         </DialogHeader>
 
         <div className="grow">
           <Tabs defaultValue="account" className="flex flex-col w-full">
             <div className="flex flex-row justify-between">
-              <TabsList className="mb-3">
+              <TabsList className="mb-3 h-auto p-2">
                 <TabsTrigger
                   value="details"
-                  className="cursor-pointer hover:opacity-90"
+                  className="cursor-pointer hover:opacity-90 border-2"
                 >
                   Details
                 </TabsTrigger>
                 {getValidAttributes(edited.category).length > 0 && (
                   <TabsTrigger
                     value="attributes"
-                    className="cursor-pointer hover:opacity-90"
+                    className="cursor-pointer hover:opacity-90 border-2"
                   >
                     Attributes
                   </TabsTrigger>
                 )}
                 <TabsTrigger
                   value="elements"
-                  className="cursor-pointer hover:opacity-90"
+                  className="cursor-pointer hover:opacity-90 border-2"
                 >
                   Elements
                 </TabsTrigger>
                 {supportsOnHit(edited.category) && (
                   <TabsTrigger
                     value="onhit"
-                    className="cursor-pointer hover:opacity-90"
+                    className="cursor-pointer hover:opacity-90 border-2"
                   >
                     On-Hit
                   </TabsTrigger>
@@ -550,7 +551,7 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                 {supportsOnEquip(edited.category) && (
                   <TabsTrigger
                     value="onequip"
-                    className="cursor-pointer hover:opacity-90"
+                    className="cursor-pointer hover:opacity-90 border-2"
                   >
                     On-Equip
                   </TabsTrigger>
@@ -558,7 +559,7 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                 {supportsImmunity(edited.category) && (
                   <TabsTrigger
                     value="immunity"
-                    className="cursor-pointer hover:opacity-90"
+                    className="cursor-pointer hover:opacity-90 border-2"
                   >
                     Immunity
                   </TabsTrigger>
@@ -566,7 +567,7 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                 {supportsAffinity(edited.category) && (
                   <TabsTrigger
                     value="affinity"
-                    className="cursor-pointer hover:opacity-90"
+                    className="cursor-pointer hover:opacity-90 border-2"
                   >
                     Affinity
                   </TabsTrigger>
@@ -626,7 +627,7 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
               </div>
             </div>
 
-            <TabsContent value="details" className="flex flex-col gap-2 h-full">
+            <TabsContent value="details" className="flex flex-col gap-4 h-full">
               <h3 className="font-semibold">Details</h3>
               <Separator />
               <div className="flex flex-row border p-3 gap-4 rounded h-full items-start">
@@ -642,110 +643,28 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                   <div className="grid grid-cols-4 gap-4">
                     <div className="flex flex-col gap-2">
                       <Label htmlFor="name">Name</Label>
-                      <Input
-                        id="name"
-                        disabled
-                        value={edited.name}
-                        onChange={(e) =>
-                          setEdited((prev) => ({
-                            ...prev,
-                            name: e.target.value,
-                          }))
-                        }
-                      />
+                      <p>{edited.name?.trim() ? edited.name : "None"}</p>
                     </div>
                     <div className="flex flex-col gap-2">
                       <Label htmlFor="license">License</Label>
-                      <Input
-                        id="license"
-                        disabled
-                        value={edited.license}
-                        onChange={(e) =>
-                          setEdited((prev) => ({
-                            ...prev,
-                            license: e.target.value,
-                          }))
-                        }
-                      />
+                      <p>{edited.license?.trim() ? edited.license : "None"}</p>
                     </div>
                     <div className="flex flex-col gap-2">
                       <Label htmlFor="category">Category</Label>
-                      <Select
-                        value={edited.category}
-                        onValueChange={(value) =>
-                          setEdited((prev) => ({
-                            ...prev,
-                            category: value as CategoryName,
-                          }))
-                        }
-                      >
-                        <SelectTrigger className="cursor-pointer">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent className="max-h-96">
-                          <div className="px-2 py-1 text-xs text-muted-foreground">
-                            Weapons
-                          </div>
-                          {weaponCategories.map((cat) => (
-                            <SelectItem key={cat} value={cat}>
-                              {cat}
-                            </SelectItem>
-                          ))}
-
-                          <div className="px-2 py-1 text-xs text-muted-foreground">
-                            Shields
-                          </div>
-                          {shieldCategories.map((cat) => (
-                            <SelectItem key={cat} value={cat}>
-                              {cat}
-                            </SelectItem>
-                          ))}
-
-                          <div className="px-2 py-1 text-xs text-muted-foreground">
-                            Armors & Accessories
-                          </div>
-                          {armorCategories.map((cat) => (
-                            <SelectItem key={cat} value={cat}>
-                              {cat}
-                            </SelectItem>
-                          ))}
-
-                          <div className="px-2 py-1 text-xs text-muted-foreground">
-                            Ammunition
-                          </div>
-                          {ammoCategories.map((cat) => (
-                            <SelectItem key={cat} value={cat}>
-                              {cat}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <p>
+                        {edited.category?.trim() ? edited.category : "None"}
+                      </p>
                     </div>
                   </div>
                   <div className="flex flex-col gap-2">
                     <Label htmlFor="notes">Notes</Label>
-                    <Textarea
-                      id="notes"
-                      disabled
-                      maxLength={110}
-                      value={edited.notes}
-                      onChange={(e) =>
-                        setEdited((prev) => ({
-                          ...prev,
-                          notes: e.target.value,
-                        }))
-                      }
-                      className="resize-none"
-                    />
-                    <p className="text-xs text-muted-foreground text-right">
-                      {edited.notes.length}/110
-                    </p>
+                    <p>{edited.notes?.trim() ? edited.notes : "None"}</p>
                   </div>
                 </div>
               </div>
             </TabsContent>
 
-            <TabsContent value="attributes" className="flex flex-col gap-2">
+            <TabsContent value="attributes" className="flex flex-col gap-4">
               <h3 className="font-semibold">Attributes</h3>
               <Separator />
               {getValidAttributes(edited.category).map((key) => {
@@ -755,8 +674,8 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                 };
                 const gridClass =
                   openedAttrKey === key
-                    ? "grid grid-cols-6 gap-x-2 gap-y-3 pr-48"
-                    : "grid grid-cols-6 gap-x-2 gap-y-3";
+                    ? "grid grid-cols-6 gap-x-2 gap-y-3 pr-48 transition-all duration-200 ease-[cubic-bezier(0.5,0,0,1)]"
+                    : "grid grid-cols-6 gap-x-2 gap-y-3 transition-all duration-200 ease-[cubic-bezier(0.5,0,0,1)]";
                 return (
                   <div key={key} className="border p-3 rounded">
                     <div className="flex flex-row font-medium mb-3">

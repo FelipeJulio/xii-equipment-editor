@@ -36,6 +36,12 @@ export function GenerateAttribute({
   const [mode, setMode] = useState<"linear" | "scale">("linear");
   const [factor, setFactor] = useState<number>(1);
 
+  const isDisabled =
+    minVal.trim() === "" ||
+    maxVal.trim() === "" ||
+    isNaN(parseFloat(minVal)) ||
+    isNaN(parseFloat(maxVal));
+
   function handleOpenChange(newState: boolean) {
     setOpen(newState);
     onOpenChange(newState);
@@ -162,6 +168,7 @@ export function GenerateAttribute({
               size="sm"
               className="cursor-pointer"
               onClick={generateScales}
+              disabled={isDisabled}
             >
               <Star />
               Generate

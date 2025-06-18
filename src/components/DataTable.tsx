@@ -166,9 +166,9 @@ export function DataTable<TData extends EquipmentItem>({
 
   const getSigilColor = useCallback((level: number): string => {
     if (level >= 12) {
-      return "#fd4336";
+      return "#fd5436";
     } else if (level >= 11) {
-      return "#ffa825";
+      return "#ff8e25";
     } else if (level >= 9) {
       return "#784bff";
     } else if (level >= 6) {
