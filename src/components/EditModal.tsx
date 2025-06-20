@@ -477,7 +477,7 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
 
   const supportsOnEquip = (category: string) => {
     const type = getCategoryType(category);
-    return type === "shield" || type === "armor";
+    return type === "shield" || type === "armor" || type === "weapon";
   };
 
   const supportsImmunity = (category: string) => {
