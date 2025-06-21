@@ -16,7 +16,8 @@ export type AttributeKey =
   | "str"
   | "mgk"
   | "vit"
-  | "spd";
+  | "spd"
+  | "aug";
 
 export type ElementKey =
   | "fire"
@@ -64,6 +65,8 @@ export type StatusKey =
 
 export type AffinityTypeKey = "absorb" | "immune" | "half" | "weak" | "potency";
 
+export type AugmentId = number;
+
 //Labels and Icons
 
 export const attributeLabels: Record<AttributeKey, string> = {
@@ -83,6 +86,7 @@ export const attributeLabels: Record<AttributeKey, string> = {
   mgk: "Magick Power",
   vit: "Vitality",
   spd: "Speed",
+  aug: "Augment",
 };
 
 export const elementLabels: Record<ElementKey, string> = {
@@ -137,6 +141,139 @@ export const affinityTypeLabels: Record<AffinityTypeKey, string> = {
   half: "Half",
   weak: "Weak",
   potency: "Potency",
+};
+
+export const augmentLabels: Record<AugmentId, string> = {
+  255: "None",
+  0: "Stability",
+  1: "Safety",
+  2: "Accuracy Boost",
+  3: "Shield Boost",
+  4: "Evasion Boost",
+  5: "Last Stand",
+  6: "Counter",
+  7: "Counter Boost",
+  8: "Spellbreaker",
+  9: "Brawler",
+  10: "Adrenaline",
+  11: "Focus",
+  12: "Lobbying",
+  13: "Combo Boost",
+  14: "Item Boost",
+  15: "Medicine Reverse",
+  16: "Weatherproof",
+  17: "Thievery",
+  18: "Saboteur",
+  19: "Magick Lore 1",
+  20: "Warmage",
+  21: "Martyr",
+  22: "Magick Lore 2",
+  23: "Headsman",
+  24: "Magick Lore 3",
+  25: "Treasure Hunter",
+  26: "Magick Lore 4",
+  27: "Double EXP",
+  28: "Double LP",
+  29: "No EXP",
+  30: "Spellbound",
+  31: "Piercing Magick",
+  32: "Offering",
+  33: "Muffle",
+  34: "Life Cloak",
+  35: "Battle Lore 1",
+  36: "Parsimony",
+  37: "Tread Lightly",
+  38: "Unused",
+  39: "Emptiness",
+  40: "Resist Piercing Damage",
+  41: "Anti-Libra",
+  42: "Battle Lore 2",
+  43: "Battle Lore 3",
+  44: "Battle Lore 4",
+  45: "Battle Lore 5",
+  46: "Battle Lore 6",
+  47: "Battle Lore 7",
+  48: "Stoneskin",
+  49: "Attack Boost",
+  50: "Double Edged",
+  51: "Spellspring",
+  52: "Elemental Shift",
+  53: "Celerity",
+  54: "Swiftcast",
+  55: "Physical-Immunity",
+  56: "Magick-Immunity",
+  57: "Status-Immunity",
+  58: "Damage Spikes",
+  59: "Suicidal",
+  60: "Battle Lore 8",
+  61: "Battle Lore 9",
+  62: "Battle Lore 10",
+  63: "Battle Lore 11",
+  64: "Battle Lore 12",
+  65: "Battle Lore 13",
+  66: "Battle Lore 14",
+  67: "Battle Lore 15",
+  68: "Battle Lore 16",
+  69: "Magick Lore 5",
+  70: "Magick Lore 6",
+  71: "Magick Lore 7",
+  72: "Magick Lore 8",
+  73: "Magick Lore 9",
+  74: "HP +30",
+  75: "HP +70",
+  76: "HP +110",
+  77: "HP +150",
+  78: "HP +190",
+  79: "HP +230",
+  80: "HP +270",
+  81: "HP +310",
+  82: "HP +350",
+  83: "HP +390",
+  84: "HP +435",
+  85: "HP +500",
+  86: "Inquisitor",
+  87: "Magick Lore 10",
+  88: "Shield Block 3",
+  89: "Shield Block 2",
+  90: "Shield Block 1",
+  91: "Channeling 3",
+  92: "Channeling 2",
+  93: "Channeling 1",
+  94: "Swiftness 3",
+  95: "Swiftness 2",
+  96: "Swiftness 1",
+  97: "Magick Lore 11",
+  98: "Magick Lore 12",
+  99: "Magick Lore 13",
+  100: "Magick Lore 14",
+  101: "Magick Lore 15",
+  102: "Magick Lore 16",
+  103: "Serenity",
+  104: "Gambit Slot 1",
+  105: "Gambit Slot 2",
+  106: "Gambit Slot 3",
+  107: "Gambit Slot 4",
+  108: "Gambit Slot 5",
+  109: "Gambit Slot 6",
+  110: "Gambit Slot 7",
+  111: "Gambit Slot 8",
+  112: "Gambit Slot 9",
+  113: "Gambit Slot 10",
+  114: "Essentials",
+  115: "Unused",
+  116: "Remedy Lore 3",
+  117: "Remedy Lore 2",
+  118: "Remedy Lore 1",
+  119: "Potion Lore 3",
+  120: "Potion Lore 2",
+  121: "Potion Lore 1",
+  122: "Ether Lore 3",
+  123: "Ether Lore 2",
+  124: "Ether Lore 1",
+  125: "Phoenix Lore 3",
+  126: "Phoenix Lore 2",
+  127: "Phoenix Lore 1",
+  128: "Second Board",
 };
 
 export const elementIcons: Record<ElementKey, number> = {
@@ -267,9 +404,7 @@ export interface EquipmentItem {
   license: string;
   category: CategoryName;
   notes: string;
-
   attr: Partial<Record<AttributeKey, { value: number; scale: number[] }>>;
-
   element: ElementEntry[];
   onhit: StatusEntry[][];
   onequip: StatusEntry[][];
@@ -309,10 +444,8 @@ export const categoryToIconType: Record<CategoryName, IconType> = {
   "Hand-Bomb": "weapons",
   Unarmed: "weapons",
   Unused: "weapons",
-
   // Shield
   Shield: "protectives",
-
   // Armor
   "Light Helm": "protectives",
   "Mystic Helm": "protectives",
@@ -320,7 +453,6 @@ export const categoryToIconType: Record<CategoryName, IconType> = {
   "Light Armor": "protectives",
   "Mystic Armor": "protectives",
   "Heavy Armor": "protectives",
-
   // Accessories
   Ring: "accessories",
   Armlet: "accessories",
@@ -332,7 +464,6 @@ export const categoryToIconType: Record<CategoryName, IconType> = {
   Nethecite: "accessories",
   Ribbon: "accessories",
   Shard: "accessories",
-
   // Ammunition
   Arrow: "ammunitions",
   Bolt: "ammunitions",

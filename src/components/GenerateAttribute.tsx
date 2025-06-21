@@ -78,7 +78,7 @@ export function GenerateAttribute({
           Auto Scale
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-64 p-4">
+      <PopoverContent className="w-[240px] p-4" align="end">
         <div className="flex flex-col gap-4">
           <p className="text-md font-semibold flex flex-row justify-between">
             <span>{label}</span>

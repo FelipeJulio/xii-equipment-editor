@@ -20,6 +20,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 
 import {
   AlertDialog,
@@ -66,7 +67,7 @@ import GameIcon from "@/components/GameIcon";
 
 import { getEquipmentData, saveEquipmentData } from "@/lib/localStorage";
 import ItemImage from "@/components/ItemImage";
-import { Badge } from "./ui/badge";
+import { AugmentPicker } from "@/components/AugmentPicker";
 
 interface EditModalProps {
   item: EquipmentItem;
@@ -531,6 +532,16 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                     Attributes
                   </TabsTrigger>
                 )}
+                {armorCategories.includes(
+                  edited.category as ArmorCategoryName
+                ) && (
+                  <TabsTrigger
+                    value="augment"
+                    className="cursor-pointer hover:opacity-90 border-2"
+                  >
+                    Augments
+                  </TabsTrigger>
+                )}
                 <TabsTrigger
                   value="elements"
                   className="cursor-pointer hover:opacity-90 border-2"
@@ -661,6 +672,51 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
               </div>
             </TabsContent>
 
+            <TabsContent value="augment" className="flex flex-col gap-4">
+              <h3 className="font-semibold">Augments</h3>
+              <Separator />
+              <div className="grid grid-cols-4 gap-x-2 gap-y-3 border p-3 rounded">
+                {Array.from({ length: 12 }).map((_, idx) => {
+                  const entry = edited.attr.aug || {
+                    value: 0,
+                    scale: Array(12).fill("none"),
+                  };
+                  const val = entry.scale[idx] || "none";
+
+                  return (
+                    <div key={idx} className="flex gap-2 flex-col">
+                      <Label>Level {idx + 1}</Label>
+                      <AugmentPicker
+                        value={val}
+                        onValueChange={(v) => {
+                          setEdited((prev) => {
+                            const current = prev.attr.aug || {
+                              value: 0,
+                              scale: Array(12).fill("none"),
+                            };
+
+                            const newScale = [...current.scale];
+                            newScale[idx] = v;
+
+                            return {
+                              ...prev,
+                              attr: {
+                                ...prev.attr,
+                                aug: {
+                                  ...current,
+                                  scale: newScale,
+                                },
+                              },
+                            };
+                          });
+                        }}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            </TabsContent>
+
             <TabsContent value="attributes" className="flex flex-col gap-4">
               <h3 className="font-semibold">Attributes</h3>
               <Separator />
@@ -671,7 +727,7 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                 };
                 const gridClass =
                   openedAttrKey === key
-                    ? "grid grid-cols-6 gap-x-2 gap-y-3 pr-48 transition-all duration-200 ease-[cubic-bezier(0.5,0,0,1)]"
+                    ? "grid grid-cols-6 gap-x-2 gap-y-3 pr-[248px] transition-all duration-200 ease-[cubic-bezier(0.5,0,0,1)]"
                     : "grid grid-cols-6 gap-x-2 gap-y-3 transition-all duration-200 ease-[cubic-bezier(0.5,0,0,1)]";
                 return (
                   <div key={key} className="border p-3 rounded">
@@ -722,7 +778,7 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
             <TabsContent value="elements" className="flex flex-col gap-4">
               <h3 className="font-semibold">Elements</h3>
               <Separator />
-              <div className="grid grid-cols-6 gap-x-2 gap-y-3 border p-3 rounded">
+              <div className="grid grid-cols-4 gap-x-2 gap-y-3 border p-3 rounded">
                 {Array.from({ length: 12 }).map((_, idx) => {
                   const entry = edited.element?.[idx];
                   const val = entry && entry.name ? entry.name : "none";

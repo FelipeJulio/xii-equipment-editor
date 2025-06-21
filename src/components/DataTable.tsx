@@ -42,6 +42,7 @@ import { Meh, Trash2 } from "lucide-react";
 import { getColumns } from "@/components/EquipmentColumns";
 import GameIcon from "@/components/GameIcon";
 import { ExportDropdown } from "@/components/ExportDropdown";
+import { AugmentFilter } from "@/components/AugmentFilter";
 
 interface DataTableProps<TData extends EquipmentItem> {
   data: TData[];
@@ -54,6 +55,7 @@ export function DataTable<TData extends EquipmentItem>({
 }: DataTableProps<TData>) {
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [augmentFilter, setAugmentFilter] = useState<string>("all");
   const [elementFilter, setElementFilter] = useState<string>("all");
   const [onhitFilter, setOnhitFilter] = useState<string>("all");
   const [onequipFilter, setOnequipFilter] = useState<string>("all");
@@ -86,6 +88,10 @@ export function DataTable<TData extends EquipmentItem>({
           return false;
 
         if (categoryFilter !== "all" && item.category !== categoryFilter)
+          return false;
+
+        const augmentValue = item.attr["aug"]?.scale?.[level - 1] ?? 255;
+        if (augmentFilter !== "all" && String(augmentValue) !== augmentFilter)
           return false;
 
         if (
@@ -153,6 +159,7 @@ export function DataTable<TData extends EquipmentItem>({
       data,
       globalFilter,
       categoryFilter,
+      augmentFilter,
       elementFilter,
       onhitFilter,
       onequipFilter,
@@ -258,6 +265,7 @@ export function DataTable<TData extends EquipmentItem>({
             </SelectContent>
           </Select>
         </div>
+        <AugmentFilter value={augmentFilter} onValueChange={setAugmentFilter} />
         <div className="flex flex-col gap-1">
           <p className="text-sm font-medium">Element</p>
           <Select value={elementFilter} onValueChange={setElementFilter}>

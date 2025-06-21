@@ -13,6 +13,7 @@ import {
   elementLabels,
   statusLabels,
   affinityTypeLabels,
+  augmentLabels,
 } from "@/typings/types";
 
 import { EditButton } from "@/components/EditButton";
@@ -108,6 +109,22 @@ export function getColumns(
             <span>{category}</span>
           </div>
         );
+      },
+    },
+    {
+      id: "augment",
+      header: "Augment",
+      cell: ({ row }) => {
+        const augmentAttr = row.original.attr["aug"];
+        const value = augmentAttr?.scale?.[level - 1] ?? 255;
+
+        if (value === 255) {
+          return "-";
+        }
+
+        const label = augmentLabels[value] || `#${value}`;
+
+        return <span>{label}</span>;
       },
     },
     {
