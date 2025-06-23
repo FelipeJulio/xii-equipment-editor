@@ -44,7 +44,7 @@ export function AugmentFilter({ value, onValueChange }: AugmentFilterProps) {
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-[200px] justify-between"
+            className="w-auto justify-between"
           >
             {value !== "all"
               ? augmentLabels[parseInt(value)] ?? "Unknown"
@@ -52,7 +52,7 @@ export function AugmentFilter({ value, onValueChange }: AugmentFilterProps) {
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0">
+        <PopoverContent className="w-auto p-0">
           <Command>
             <CommandInput placeholder="Search augment..." className="h-9" />
             <CommandList>
