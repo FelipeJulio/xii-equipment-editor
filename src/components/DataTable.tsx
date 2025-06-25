@@ -96,7 +96,7 @@ export function DataTable<TData extends EquipmentItem>({
 
         if (
           elementFilter !== "all" &&
-          ![item.element[level - 1]].some(
+          ![item.element.scale[level - 1]].some(
             (e: ElementEntry | undefined) => e?.name === elementFilter
           )
         )
@@ -104,7 +104,7 @@ export function DataTable<TData extends EquipmentItem>({
 
         if (
           onhitFilter !== "all" &&
-          !item.onhit[level - 1].some(
+          !item.onhit.scale[level - 1].some(
             (s: StatusEntry) => s.name === onhitFilter
           )
         )
@@ -112,7 +112,7 @@ export function DataTable<TData extends EquipmentItem>({
 
         if (
           onequipFilter !== "all" &&
-          !item.onequip[level - 1].some(
+          !item.onequip.scale[level - 1].some(
             (s: StatusEntry) => s.name === onequipFilter
           )
         )
@@ -120,13 +120,13 @@ export function DataTable<TData extends EquipmentItem>({
 
         if (
           immunityFilter !== "all" &&
-          !item.immunity[level - 1].some(
+          !item.immunity.scale[level - 1].some(
             (s: StatusEntry) => s.name === immunityFilter
           )
         )
           return false;
 
-        const affinities = item.affinity[level - 1];
+        const affinities = item.affinity.scale[level - 1];
 
         if (affinityTypeFilter !== "all" && affinityElementFilter !== "all") {
           if (

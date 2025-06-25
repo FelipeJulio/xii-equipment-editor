@@ -82,32 +82,59 @@ export function parseRawData(): EquipmentItem[] {
       parsedAttr[key] = { value, scale: Array(12).fill(max) };
     });
 
-    const parsedElement: ElementEntry[] = Array.from({ length: 12 }, (_, i) => {
-      const el = item.element?.[i];
-      return el && el.name
+    const parsedElement: {
+      value: ElementEntry;
+      scale: ElementEntry[];
+    } = {
+      value: item.element?.[0]?.name
         ? {
-            name: el.name as ElementKey,
-            icon: elementIcons[el.name as ElementKey] ?? 0,
+            name: item.element[0].name as ElementKey,
+            icon: elementIcons[item.element[0].name as ElementKey] ?? 0,
           }
-        : {};
-    });
+        : {},
+      scale: Array.from({ length: 12 }, (_, i) => {
+        const el = item.element?.[i];
+        return el && el.name
+          ? {
+              name: el.name as ElementKey,
+              icon: elementIcons[el.name as ElementKey] ?? 0,
+            }
+          : {};
+      }),
+    };
 
     const parseStatusArray = (
       arr?: { name?: string; icon?: number }[][]
-    ): StatusEntry[][] =>
-      Array.from({ length: 12 }, (_, i) =>
+    ): { value: StatusEntry[]; scale: StatusEntry[][] } => ({
+      value: (arr?.[0] ?? [])
+        .filter(
+          (s): s is { name: string; icon: number } => typeof s.name === "string"
+        )
+        .map((s) => ({ name: s.name as StatusKey, icon: s.icon })),
+      scale: Array.from({ length: 12 }, (_, i) =>
         (arr?.[i] ?? [])
           .filter(
             (s): s is { name: string; icon: number } =>
               typeof s.name === "string"
           )
           .map((s) => ({ name: s.name as StatusKey, icon: s.icon }))
-      );
+      ),
+    });
 
     const parseAffinityArray = (
       arr?: { type?: string; element?: string; icon?: number }[][]
-    ): AffinityEntry[][] =>
-      Array.from({ length: 12 }, (_, i) =>
+    ): { value: AffinityEntry[]; scale: AffinityEntry[][] } => ({
+      value: (arr?.[0] ?? [])
+        .filter(
+          (a): a is { type: string; element: string; icon: number } =>
+            typeof a.type === "string" && typeof a.element === "string"
+        )
+        .map((a) => ({
+          type: a.type as AffinityTypeKey,
+          element: a.element as ElementKey,
+          icon: elementIcons[a.element as ElementKey] ?? 0,
+        })),
+      scale: Array.from({ length: 12 }, (_, i) =>
         (arr?.[i] ?? [])
           .filter(
             (a): a is { type: string; element: string; icon: number } =>
@@ -118,12 +145,8 @@ export function parseRawData(): EquipmentItem[] {
             element: a.element as ElementKey,
             icon: elementIcons[a.element as ElementKey] ?? 0,
           }))
-      );
-
-    const parsedOnHit = parseStatusArray(item.onhit);
-    const parsedOnEquip = parseStatusArray(item.onequip);
-    const parsedImmunity = parseStatusArray(item.immunity);
-    const parsedAffinity = parseAffinityArray(item.affinity);
+      ),
+    });
 
     let parsedCategory: CategoryName | null = null;
 
@@ -152,10 +175,10 @@ export function parseRawData(): EquipmentItem[] {
       category: parsedCategory,
       attr: parsedAttr,
       element: parsedElement,
-      onhit: parsedOnHit,
-      onequip: parsedOnEquip,
-      immunity: parsedImmunity,
-      affinity: parsedAffinity,
+      onhit: parseStatusArray(item.onhit),
+      onequip: parseStatusArray(item.onequip),
+      immunity: parseStatusArray(item.immunity),
+      affinity: parseAffinityArray(item.affinity),
     };
 
     return parsedItem;

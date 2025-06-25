@@ -78,29 +78,47 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
   function normalizeItem(item: EquipmentItem): EquipmentItem {
     return {
       ...item,
-      onhit:
-        Array.isArray(item.onhit) && item.onhit.length === 12
-          ? item.onhit
-          : Array.from({ length: 12 }, () => []),
-      onequip:
-        Array.isArray(item.onequip) && item.onequip.length === 12
-          ? item.onequip
-          : Array.from({ length: 12 }, () => []),
-      immunity:
-        Array.isArray(item.immunity) && item.immunity.length === 12
-          ? item.immunity
-          : Array.from({ length: 12 }, () => []),
-      affinity:
-        Array.isArray(item.affinity) && item.affinity.length === 12
-          ? item.affinity
-          : Array.from({ length: 12 }, () => []),
-      element:
-        Array.isArray(item.element) && item.element.length === 12
-          ? item.element
-          : Array.from({ length: 12 }, () => ({
-              name: "" as ElementKey,
-              icon: 0,
-            })),
+      onhit: {
+        value: item.onhit?.scale?.[0] ?? [],
+        scale:
+          Array.isArray(item.onhit?.scale) && item.onhit.scale.length === 12
+            ? item.onhit.scale
+            : Array.from({ length: 12 }, () => []),
+      },
+
+      onequip: {
+        value: item.onequip?.scale?.[0] ?? [],
+        scale:
+          Array.isArray(item.onequip?.scale) && item.onequip.scale.length === 12
+            ? item.onequip.scale
+            : Array.from({ length: 12 }, () => []),
+      },
+
+      immunity: {
+        value: item.immunity?.scale?.[0] ?? [],
+        scale:
+          Array.isArray(item.immunity?.scale) &&
+          item.immunity.scale.length === 12
+            ? item.immunity.scale
+            : Array.from({ length: 12 }, () => []),
+      },
+
+      affinity: {
+        value: item.affinity?.scale?.[0] ?? [],
+        scale:
+          Array.isArray(item.affinity?.scale) &&
+          item.affinity.scale.length === 12
+            ? item.affinity.scale
+            : Array.from({ length: 12 }, () => []),
+      },
+
+      element: {
+        value: item.element?.scale?.[0] ?? {},
+        scale:
+          Array.isArray(item.element?.scale) && item.element.scale.length === 12
+            ? item.element.scale
+            : Array.from({ length: 12 }, () => ({})),
+      },
     };
   }
 
@@ -147,18 +165,22 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
 
   const handleElementChange = (level: number, val: ElementKey | "none") => {
     setEdited((prev) => {
-      const newElements: ElementEntry[] = [...(prev.element || [])];
+      const newScale = [...prev.element.scale];
 
-      while (newElements.length < 12) {
-        newElements.push({ name: "" as ElementKey, icon: 0 });
+      while (newScale.length < 12) {
+        newScale.push({});
       }
 
-      newElements[level] =
-        val === "none"
-          ? { name: "" as ElementKey, icon: 0 }
-          : { name: val, icon: elementIcons[val] ?? 0 };
+      newScale[level] =
+        val === "none" ? {} : { name: val, icon: elementIcons[val] ?? 0 };
 
-      return { ...prev, element: newElements };
+      return {
+        ...prev,
+        element: {
+          ...prev.element,
+          scale: newScale,
+        },
+      };
     });
   };
 
@@ -169,28 +191,29 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
     level: number
   ) => {
     setEdited((prev) => {
-      const newField = (prev[field] as StatusEntry[][]).slice();
+      const fieldData = prev[field];
+      const newScale = [...fieldData.scale];
 
-      if (!Array.isArray(newField[level])) {
-        newField[level] = [];
+      while (newScale.length < 12) {
+        newScale.push([]);
       }
 
-      const usedNames = newField[level].map((e) => e.name);
+      const levelArr = [...(newScale[level] || [])];
+      const usedNames = levelArr.map((e) => e.name);
 
       const nextKey = allStatusKeys.find((sk) => !usedNames.includes(sk));
-      if (!nextKey) {
-        return prev;
-      }
+      if (!nextKey) return prev;
 
-      newField[level] = [
-        ...newField[level],
-        { name: nextKey, icon: statusIcons[nextKey] ?? 0 },
-      ];
+      levelArr.push({ name: nextKey, icon: statusIcons[nextKey] ?? 0 });
+      newScale[level] = levelArr;
 
       return {
         ...prev,
-        [field]: newField,
-      } as EquipmentItem;
+        [field]: {
+          ...fieldData,
+          scale: newScale,
+        },
+      };
     });
   };
 
@@ -200,20 +223,24 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
     idx: number
   ) => {
     setEdited((prev) => {
-      const newField = (prev[field] as StatusEntry[][]).slice();
+      const fieldData = prev[field];
+      const newScale = [...fieldData.scale];
 
-      if (!Array.isArray(newField[level])) {
-        newField[level] = [];
+      if (!Array.isArray(newScale[level])) {
+        newScale[level] = [];
       }
 
-      const lvlArr = newField[level]!.slice();
+      const lvlArr = [...newScale[level]];
       lvlArr.splice(idx, 1);
-      newField[level] = lvlArr;
+      newScale[level] = lvlArr;
 
       return {
         ...prev,
-        [field]: newField,
-      } as EquipmentItem;
+        [field]: {
+          ...fieldData,
+          scale: newScale,
+        },
+      };
     });
   };
 
@@ -224,20 +251,24 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
     val: StatusKey
   ) => {
     setEdited((prev) => {
-      const newField = (prev[field] as StatusEntry[][]).slice();
+      const fieldData = prev[field];
+      const newScale = [...fieldData.scale];
 
-      if (!Array.isArray(newField[level])) {
-        newField[level] = [];
+      if (!Array.isArray(newScale[level])) {
+        newScale[level] = [];
       }
 
-      const lvlArr = newField[level]!.slice();
+      const lvlArr = [...newScale[level]];
       lvlArr[idx] = { name: val, icon: statusIcons[val] ?? 0 };
-      newField[level] = lvlArr;
+      newScale[level] = lvlArr;
 
       return {
         ...prev,
-        [field]: newField,
-      } as EquipmentItem;
+        [field]: {
+          ...fieldData,
+          scale: newScale,
+        },
+      };
     });
   };
 
@@ -247,45 +278,53 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
 
   const handleAffinityAdd = (level: number) => {
     setEdited((prev) => {
-      const newAffinity: AffinityEntry[][] = prev.affinity.map((lvl, i) => {
-        if (i !== level) return lvl;
+      const fieldData = prev.affinity;
+      const newScale = [...fieldData.scale];
 
-        const usedCombos = new Set<string>(
-          lvl.map((e) => `${e.type}|${e.element}`)
-        );
+      const currentLevel = newScale[level] || [];
 
-        let chosen: { type: AffinityTypeKey; element: ElementKey } | null =
-          null;
-        for (const t of allAffinityTypeKeys) {
-          for (const eKey of allElementKeys) {
-            const keyCombo = `${t}|${eKey}`;
-            if (!usedCombos.has(keyCombo)) {
-              chosen = { type: t as AffinityTypeKey, element: eKey };
-              break;
-            }
+      const usedCombos = new Set<string>(
+        currentLevel.map((e) => `${e.type}|${e.element}`)
+      );
+
+      let chosen: { type: AffinityTypeKey; element: ElementKey } | null = null;
+      for (const t of allAffinityTypeKeys) {
+        for (const eKey of allElementKeys) {
+          const keyCombo = `${t}|${eKey}`;
+          if (!usedCombos.has(keyCombo)) {
+            chosen = { type: t, element: eKey };
+            break;
           }
-          if (chosen) break;
         }
-        if (!chosen) {
-          return lvl;
-        }
+        if (chosen) break;
+      }
 
-        return [
-          ...lvl,
-          {
-            type: chosen.type,
-            element: chosen.element,
-            icon: elementIcons[chosen.element] ?? 0,
-          },
-        ];
-      });
-      return { ...prev, affinity: newAffinity };
+      if (!chosen) {
+        return prev;
+      }
+
+      const newEntry: AffinityEntry = {
+        type: chosen.type,
+        element: chosen.element,
+        icon: elementIcons[chosen.element] ?? 0,
+      };
+
+      newScale[level] = [...currentLevel, newEntry];
+
+      return {
+        ...prev,
+        affinity: {
+          ...fieldData,
+          scale: newScale,
+        },
+      };
     });
   };
 
   const handleAffinityRemove = (level: number, idx: number) => {
     setEdited((prev) => {
-      const newAffinity: AffinityEntry[][] = prev.affinity.map((lvl, i) => {
+      const fieldData = prev.affinity;
+      const newScale = fieldData.scale.map((lvl, i) => {
         if (i === level) {
           const newArr = [...lvl];
           newArr.splice(idx, 1);
@@ -293,7 +332,14 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
         }
         return lvl;
       });
-      return { ...prev, affinity: newAffinity };
+
+      return {
+        ...prev,
+        affinity: {
+          ...fieldData,
+          scale: newScale,
+        },
+      };
     });
   };
 
@@ -304,7 +350,8 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
     val: string
   ) => {
     setEdited((prev) => {
-      const newAffinity: AffinityEntry[][] = prev.affinity.map((lvl, i) => {
+      const fieldData = prev.affinity;
+      const newScale = fieldData.scale.map((lvl, i) => {
         if (i !== level) return lvl;
 
         const copy = [...lvl];
@@ -315,11 +362,19 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
         } else {
           entry.element = val as ElementKey;
         }
+
         entry.icon = elementIcons[entry.element] ?? 0;
         copy[idx] = entry;
         return copy;
       });
-      return { ...prev, affinity: newAffinity };
+
+      return {
+        ...prev,
+        affinity: {
+          ...fieldData,
+          scale: newScale,
+        },
+      };
     });
   };
 
@@ -327,26 +382,41 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
     const toSave: EquipmentItem = {
       ...edited,
 
-      element: [...edited.element],
+      element: {
+        ...edited.element,
+        scale: [...edited.element.scale] as ElementEntry[],
+      },
 
-      onhit: edited.onhit.map((lvl) =>
-        [...lvl].sort((a, b) => a.name.localeCompare(b.name))
-      ),
+      onhit: {
+        ...edited.onhit,
+        scale: edited.onhit.scale.map((lvl) =>
+          [...lvl].sort((a, b) => a.name.localeCompare(b.name))
+        ),
+      },
 
-      onequip: edited.onequip.map((lvl) =>
-        [...lvl].sort((a, b) => a.name.localeCompare(b.name))
-      ),
+      onequip: {
+        ...edited.onequip,
+        scale: edited.onequip.scale.map((lvl) =>
+          [...lvl].sort((a, b) => a.name.localeCompare(b.name))
+        ),
+      },
 
-      immunity: edited.immunity.map((lvl) =>
-        [...lvl].sort((a, b) => a.name.localeCompare(b.name))
-      ),
+      immunity: {
+        ...edited.immunity,
+        scale: edited.immunity.scale.map((lvl) =>
+          [...lvl].sort((a, b) => a.name.localeCompare(b.name))
+        ),
+      },
 
-      affinity: edited.affinity.map((lvl) =>
-        [...lvl].sort((a, b) => {
-          const cmpType = a.type.localeCompare(b.type);
-          return cmpType !== 0 ? cmpType : a.element.localeCompare(b.element);
-        })
-      ),
+      affinity: {
+        ...edited.affinity,
+        scale: edited.affinity.scale.map((lvl) =>
+          [...lvl].sort((a, b) => {
+            const cmpType = a.type.localeCompare(b.type);
+            return cmpType !== 0 ? cmpType : a.element.localeCompare(b.element);
+          })
+        ),
+      },
     };
 
     const allData = getEquipmentData();
@@ -778,9 +848,26 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
             <TabsContent value="elements" className="flex flex-col gap-4">
               <h3 className="font-semibold">Elements</h3>
               <Separator />
+              <div className="space-y-4 flex flex-row items-start gap-2">
+                <p className="font-medium m-0">Original Value:</p>
+                <div className="flex flex-row flex-wrap gap-2">
+                  {edited.element?.value && edited.element.value.name ? (
+                    <div className="flex flex-row items-center gap-1">
+                      <GameIcon
+                        type="elements"
+                        name={edited.element.value.name}
+                        size={16}
+                      />
+                      <span>{elementLabels[edited.element.value.name]}</span>
+                    </div>
+                  ) : (
+                    <span>None</span>
+                  )}
+                </div>
+              </div>
               <div className="grid grid-cols-4 gap-x-2 gap-y-3 border p-3 rounded">
                 {Array.from({ length: 12 }).map((_, idx) => {
-                  const entry = edited.element?.[idx];
+                  const entry = edited.element?.scale?.[idx];
                   const val = entry && entry.name ? entry.name : "none";
 
                   return (
@@ -822,9 +909,9 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
             </TabsContent>
 
             {(["onhit", "onequip", "immunity"] as const).map((field) => {
-              const fieldArr = Array.isArray(edited[field])
-                ? (edited[field] as StatusEntry[][])
-                : [];
+              const fieldArr =
+                (edited[field] as { scale: StatusEntry[][] })?.scale ?? [];
+
               return (
                 <TabsContent
                   key={field}
@@ -833,6 +920,33 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                 >
                   <h3 className="font-semibold capitalize">{field}</h3>
                   <Separator />
+
+                  <div className="space-y-4 flex flex-row items-center gap-2">
+                    <p className="font-medium m-0">Original Value:</p>
+                    <div className="flex flex-row items-center gap-2">
+                      {(edited[field] as { value: StatusEntry[] })?.value
+                        .length > 0 ? (
+                        (edited[field] as { value: StatusEntry[] })?.value.map(
+                          (entry, i) => (
+                            <div
+                              key={i}
+                              className="flex flex-row items-center gap-1"
+                            >
+                              <GameIcon
+                                type="status"
+                                name={entry.name}
+                                size={16}
+                              />
+                              <span>{statusLabels[entry.name]}</span>
+                            </div>
+                          )
+                        )
+                      ) : (
+                        <span>None</span>
+                      )}
+                    </div>
+                  </div>
+
                   <div className="space-y-4">
                     {fieldArr.map((lvlArr: StatusEntry[], lvlIdx: number) => (
                       <div key={lvlIdx} className="border p-3 rounded">
@@ -923,8 +1037,49 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
             <TabsContent value="affinity" className="flex flex-col gap-4">
               <h3 className="font-semibold">Affinity</h3>
               <Separator />
+
+              <div className="space-y-4 flex flex-col items-start gap-2">
+                <p className="font-medium m-0">Original Value:</p>
+                <div className="flex flex-col gap-1">
+                  {edited.affinity.value.length > 0 ? (
+                    allAffinityTypeKeys.map((typeKey) => {
+                      const entries = edited.affinity.value.filter(
+                        (entry) => entry.type === typeKey
+                      );
+                      if (entries.length === 0) return null;
+
+                      return (
+                        <div
+                          key={typeKey}
+                          className="flex items-center gap-2 flex-wrap"
+                        >
+                          <span className="font-medium">
+                            {affinityTypeLabels[typeKey]}:
+                          </span>
+                          {entries.map((entry, i) => (
+                            <div
+                              key={i}
+                              className="flex flex-row items-center gap-2"
+                            >
+                              <GameIcon
+                                type="elements"
+                                name={entry.element}
+                                size={16}
+                              />
+                              <span>{elementLabels[entry.element]}</span>
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <span>None</span>
+                  )}
+                </div>
+              </div>
+
               <div className="space-y-4">
-                {edited.affinity.map((lvl, lvlIdx) => (
+                {edited.affinity.scale.map((lvl, lvlIdx) => (
                   <div key={lvlIdx} className="border p-3 rounded">
                     <div className="flex items-center justify-between">
                       <p className="font-medium">Level {lvlIdx + 1}</p>

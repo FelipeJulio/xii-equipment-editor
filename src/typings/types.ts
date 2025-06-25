@@ -405,11 +405,30 @@ export interface EquipmentItem {
   category: CategoryName;
   notes: string;
   attr: Partial<Record<AttributeKey, { value: number; scale: number[] }>>;
-  element: ElementEntry[];
-  onhit: StatusEntry[][];
-  onequip: StatusEntry[][];
-  immunity: StatusEntry[][];
-  affinity: AffinityEntry[][];
+  element: {
+    value: ElementEntry;
+    scale: ElementEntry[];
+  };
+
+  onhit: {
+    value: StatusEntry[];
+    scale: StatusEntry[][];
+  };
+
+  onequip: {
+    value: StatusEntry[];
+    scale: StatusEntry[][];
+  };
+
+  immunity: {
+    value: StatusEntry[];
+    scale: StatusEntry[][];
+  };
+
+  affinity: {
+    value: AffinityEntry[];
+    scale: AffinityEntry[][];
+  };
 }
 
 // Icon Map
