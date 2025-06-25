@@ -60,6 +60,7 @@ import {
   attributeLabels,
   elementIcons,
   statusIcons,
+  augmentLabels,
 } from "@/typings/types";
 
 import { GenerateAttribute } from "@/components/GenerateAttribute";
@@ -745,6 +746,18 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
             <TabsContent value="augment" className="flex flex-col gap-4">
               <h3 className="font-semibold">Augments</h3>
               <Separator />
+              <div className="space-y-4 flex flex-row items-start gap-2">
+                <p className="font-medium m-0">Original Value:</p>
+                <div className="flex flex-row flex-wrap gap-2">
+                  {edited.attr.aug?.value && edited.attr.aug.value !== 0 ? (
+                    <div className="flex flex-row items-center gap-1">
+                      <span>{augmentLabels[edited.attr.aug.value]}</span>
+                    </div>
+                  ) : (
+                    <span className="italic text-muted-foreground">None</span>
+                  )}
+                </div>
+              </div>
               <div className="grid grid-cols-4 gap-x-2 gap-y-3 border p-3 rounded">
                 {Array.from({ length: 12 }).map((_, idx) => {
                   const entry = edited.attr.aug || {
