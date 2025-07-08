@@ -709,7 +709,7 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
             <TabsContent value="details" className="flex flex-col gap-4 h-full">
               <h3 className="font-semibold">Details</h3>
               <Separator />
-              <div className="flex flex-row border p-3 gap-4 rounded h-full items-start">
+              <div className="flex flex-row border p-3 gap-4 rounded-sm h-full items-start">
                 <div className="flex border border-input overflow-hidden aspect-2/3 bg-black rounded-md">
                   <ItemImage
                     index={item.bit}
@@ -718,26 +718,41 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                     height={160}
                   />
                 </div>
-                <div className="flex flex-col gap-4">
-                  <div className="grid grid-cols-4 gap-4">
-                    <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-4 grow">
+                  <div className="flex gap-4">
+                    <div className="flex flex-col border p-3 rounded-sm grow gap-2">
                       <Label htmlFor="name">Name</Label>
-                      <p>{edited.name?.trim() ? edited.name : "None"}</p>
+                      <span>{edited.name?.trim() ? edited.name : "None"}</span>
                     </div>
-                    <div className="flex flex-col gap-2">
-                      <Label htmlFor="license">License</Label>
-                      <p>{edited.license?.trim() ? edited.license : "None"}</p>
-                    </div>
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col border p-3 rounded-sm grow gap-2">
                       <Label htmlFor="category">Category</Label>
-                      <p>
-                        {edited.category?.trim() ? edited.category : "None"}
-                      </p>
+                      <span>
+                        {edited.category?.trim() ? (
+                          <>
+                            <div className="flex flex-row items-center gap-2">
+                              <GameIcon
+                                type="weapons"
+                                name={edited.category}
+                                size={22}
+                              />
+                              <span>{edited.category}</span>
+                            </div>
+                          </>
+                        ) : (
+                          <span className="text-muted-foreground">None</span>
+                        )}
+                      </span>
+                    </div>
+                    <div className="flex flex-col border p-3 rounded-sm grow gap-2">
+                      <Label htmlFor="license">License</Label>
+                      <span>
+                        {edited.license?.trim() ? edited.license : "None"}
+                      </span>
                     </div>
                   </div>
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col border p-3 rounded-sm grow gap-2">
                     <Label htmlFor="notes">Notes</Label>
-                    <p>{edited.notes?.trim() ? edited.notes : "None"}</p>
+                    <span>{edited.notes?.trim() ? edited.notes : "None"}</span>
                   </div>
                 </div>
               </div>
@@ -747,7 +762,7 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
               <h3 className="font-semibold">Augments</h3>
               <Separator />
               <div className="space-y-4 flex flex-row items-start gap-2">
-                <p className="font-medium m-0">Original Value:</p>
+                <p className="font-medium m-0">Vanilla Value:</p>
                 <div className="flex flex-row flex-wrap gap-2">
                   {edited.attr.aug?.value && edited.attr.aug.value !== 0 ? (
                     <div className="flex flex-row items-center gap-1">
@@ -758,7 +773,7 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                   )}
                 </div>
               </div>
-              <div className="grid grid-cols-4 gap-x-2 gap-y-3 border p-3 rounded">
+              <div className="grid grid-cols-4 gap-x-3 gap-y-3 border p-3 rounded">
                 {Array.from({ length: 12 }).map((_, idx) => {
                   const entry = edited.attr.aug || {
                     value: 0,
@@ -810,8 +825,8 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                 };
                 const gridClass =
                   openedAttrKey === key
-                    ? "grid grid-cols-6 gap-x-2 gap-y-3 pr-[248px] transition-all duration-200 ease-[cubic-bezier(0.5,0,0,1)]"
-                    : "grid grid-cols-6 gap-x-2 gap-y-3 transition-all duration-200 ease-[cubic-bezier(0.5,0,0,1)]";
+                    ? "grid grid-cols-6 gap-x-3 gap-y-3 pr-[248px] transition-all duration-200 ease-[cubic-bezier(0.5,0,0,1)]"
+                    : "grid grid-cols-6 gap-x-3 gap-y-3 transition-all duration-200 ease-[cubic-bezier(0.5,0,0,1)]";
                 return (
                   <div key={key} className="border p-3 rounded">
                     <div className="flex flex-row font-medium mb-3">
@@ -819,7 +834,7 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                         <p>{attributeLabels[key]}</p>
                       </div>
                       <div className="w-1/3 flex justify-center">
-                        <p>Original Value: {entry.value}</p>
+                        <p>Vanilla Value: {entry.value}</p>
                       </div>
                       <div className="w-1/3 flex justify-end">
                         <GenerateAttribute
@@ -862,7 +877,7 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
               <h3 className="font-semibold">Elements</h3>
               <Separator />
               <div className="space-y-4 flex flex-row items-start gap-2">
-                <p className="font-medium m-0">Original Value:</p>
+                <p className="font-medium m-0">Vanilla Value:</p>
                 <div className="flex flex-row flex-wrap gap-2">
                   {edited.element?.value && edited.element.value.name ? (
                     <div className="flex flex-row items-center gap-1">
@@ -878,7 +893,7 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                   )}
                 </div>
               </div>
-              <div className="grid grid-cols-4 gap-x-2 gap-y-3 border p-3 rounded">
+              <div className="grid grid-cols-4 gap-x-3 gap-y-3 border p-3 rounded">
                 {Array.from({ length: 12 }).map((_, idx) => {
                   const entry = edited.element?.scale?.[idx];
                   const val = entry && entry.name ? entry.name : "none";
@@ -935,7 +950,7 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                   <Separator />
 
                   <div className="space-y-4 flex flex-row items-center gap-2">
-                    <p className="font-medium m-0">Original Value:</p>
+                    <p className="font-medium m-0">Vanilla Value:</p>
                     <div className="flex flex-row items-center gap-2">
                       {(edited[field] as { value: StatusEntry[] })?.value
                         .length > 0 ? (
@@ -974,11 +989,11 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                             <Plus />
                           </Button>
                         </div>
-                        <div className="grid grid-cols-4 gap-2 mt-2">
+                        <div className="grid grid-cols-4 gap-3 mt-2">
                           {lvlArr.map((entry, idx) => (
                             <div
                               key={idx}
-                              className="flex border p-3 rounded items-center gap-2"
+                              className="flex border p-3 rounded-sm items-center gap-2"
                             >
                               <Select
                                 value={entry.name}
@@ -1052,7 +1067,7 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
               <Separator />
 
               <div className="space-y-4 flex flex-col items-start gap-2">
-                <p className="font-medium m-0">Original Value:</p>
+                <p className="font-medium m-0">Vanilla Value:</p>
                 <div className="flex flex-col gap-1">
                   {edited.affinity.value.length > 0 ? (
                     allAffinityTypeKeys.map((typeKey) => {
@@ -1093,7 +1108,7 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
 
               <div className="space-y-4">
                 {edited.affinity.scale.map((lvl, lvlIdx) => (
-                  <div key={lvlIdx} className="border p-3 rounded">
+                  <div key={lvlIdx} className="border p-3 rounded-sm">
                     <div className="flex items-center justify-between">
                       <p className="font-medium">Level {lvlIdx + 1}</p>
                       <Button
@@ -1105,7 +1120,7 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                         <Plus />
                       </Button>
                     </div>
-                    <div className="grid grid-cols-3 gap-2 mt-2">
+                    <div className="grid grid-cols-3 gap-3 mt-2">
                       {lvl.map((entry, idx) => {
                         const usedCombos = new Set<string>(
                           lvl
@@ -1118,7 +1133,7 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                         return (
                           <div
                             key={idx}
-                            className="flex border p-3 items-center gap-2 rounded-lg"
+                            className="flex border p-3 items-center gap-2 rounded-sm"
                           >
                             <Select
                               value={entry.type}
