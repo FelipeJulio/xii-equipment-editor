@@ -61,6 +61,7 @@ import {
   elementIcons,
   statusIcons,
   augmentLabels,
+  attributeLimits,
 } from "@/typings/types";
 
 import { GenerateAttribute } from "@/components/GenerateAttribute";
@@ -855,14 +856,16 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                           <Label>Level {idx + 1}</Label>
                           <Input
                             type="number"
+                            min={attributeLimits[key]?.min ?? 0}
+                            max={attributeLimits[key]?.max ?? 255}
                             value={val}
-                            onChange={(e) =>
-                              handleAttrScaleChange(
-                                key,
-                                idx,
-                                Number(e.target.value)
-                              )
-                            }
+                            onChange={(e) => {
+                              const raw = Number(e.target.value);
+                              const min = attributeLimits[key]?.min ?? 0;
+                              const max = attributeLimits[key]?.max ?? 255;
+                              const clamped = Math.max(min, Math.min(raw, max));
+                              handleAttrScaleChange(key, idx, clamped);
+                            }}
                             className="w-full"
                           />
                         </div>

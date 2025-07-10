@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Star } from "lucide-react";
-import { attributeLabels } from "@/typings/types";
+import { attributeLabels, attributeLimits } from "@/typings/types";
 import type { AttributeKey } from "@/typings/types";
 
 interface GenerateAttributeProps {
@@ -35,6 +35,7 @@ export function GenerateAttribute({
   const [maxVal, setMaxVal] = useState<string>("");
   const [mode, setMode] = useState<"linear" | "scale">("linear");
   const [factor, setFactor] = useState<number>(1);
+  const limits = attributeLimits[attributeKey] ?? { min: 0, max: 255 };
 
   const isDisabled =
     minVal.trim() === "" ||
@@ -52,18 +53,21 @@ export function GenerateAttribute({
     const max = parseFloat(maxVal);
     if (isNaN(min) || isNaN(max)) return;
 
+    const limits = attributeLimits[attributeKey] ?? { min: 0, max: 255 };
     const newScales: number[] = new Array(12).fill(0);
 
     if (mode === "linear") {
       for (let i = 0; i < 12; i++) {
         const raw = min + ((max - min) * i) / 11;
-        newScales[i] = Math.round(raw);
+        const clamped = Math.max(limits.min, Math.min(raw, limits.max));
+        newScales[i] = Math.round(clamped);
       }
     } else {
       for (let i = 0; i < 12; i++) {
         const t = i / 11;
         const raw = min + (max - min) * Math.pow(t, factor);
-        newScales[i] = Math.round(raw);
+        const clamped = Math.max(limits.min, Math.min(raw, limits.max));
+        newScales[i] = Math.round(clamped);
       }
     }
 
@@ -92,10 +96,23 @@ export function GenerateAttribute({
             <Input
               id={`min-${attributeKey}`}
               value={minVal}
-              onChange={(e) => setMinVal(e.target.value)}
+              onChange={(e) => {
+                const raw = parseFloat(e.target.value);
+                if (isNaN(raw)) {
+                  setMinVal(e.target.value);
+                } else {
+                  const clamped = Math.max(
+                    limits.min,
+                    Math.min(raw, limits.max)
+                  );
+                  setMinVal(clamped.toString());
+                }
+              }}
               type="number"
               className="h-8"
-              placeholder="0"
+              min={limits.min}
+              max={limits.max}
+              placeholder={`${limits.min}`}
             />
           </div>
           <Separator />
@@ -106,10 +123,23 @@ export function GenerateAttribute({
             <Input
               id={`max-${attributeKey}`}
               value={maxVal}
-              onChange={(e) => setMaxVal(e.target.value)}
+              onChange={(e) => {
+                const raw = parseFloat(e.target.value);
+                if (isNaN(raw)) {
+                  setMaxVal(e.target.value);
+                } else {
+                  const clamped = Math.max(
+                    limits.min,
+                    Math.min(raw, limits.max)
+                  );
+                  setMaxVal(clamped.toString());
+                }
+              }}
               type="number"
               className="h-8"
-              placeholder="100"
+              min={limits.min}
+              max={limits.max}
+              placeholder={`${limits.max}`}
             />
           </div>
           <Separator />

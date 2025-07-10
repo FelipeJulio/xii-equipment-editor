@@ -89,6 +89,27 @@ export const attributeLabels: Record<AttributeKey, string> = {
   aug: "Augment",
 };
 
+export const attributeLimits: Partial<
+  Record<AttributeKey, { min: number; max: number }>
+> = {
+  rge: { min: 0, max: 255 },
+  atk: { min: 0, max: 255 },
+  kb: { min: 0, max: 255 },
+  cmb: { min: 0, max: 100 },
+  evas: { min: 0, max: 100 },
+  evaw: { min: 0, max: 100 },
+  hit: { min: 0, max: 100 },
+  crg: { min: 0, max: 100 },
+  mres: { min: 0, max: 255 },
+  def: { min: 0, max: 255 },
+  hp: { min: 0, max: 255 },
+  mp: { min: 0, max: 255 },
+  str: { min: 0, max: 255 },
+  mgk: { min: 0, max: 255 },
+  vit: { min: 0, max: 255 },
+  spd: { min: 0, max: 255 },
+};
+
 export const elementLabels: Record<ElementKey, string> = {
   fire: "Fire",
   lightning: "Lightning",
