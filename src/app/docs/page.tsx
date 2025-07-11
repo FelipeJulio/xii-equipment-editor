@@ -15,7 +15,7 @@ import {
 import GameIcon from "@/components/GameIcon";
 
 export default function DocsPage() {
-  const [tab, setTab] = useState("attributes");
+  const [tab, setTab] = useState("levels");
 
   return (
     <div className="flex w-full">
@@ -24,6 +24,12 @@ export default function DocsPage() {
           <Tabs value={tab} onValueChange={setTab} className="w-full sticky">
             <h3 className="py-2 px-6 font-semibold">Docs</h3>
             <TabsList className="flex flex-col items-start gap-2 w-full h-auto bg-transparent">
+              <TabsTrigger
+                className="w-full flex justify-start py-2 px-6 cursor-pointer hover:opacity-90 border-0"
+                value="levels"
+              >
+                Centurio Sigil Levels
+              </TabsTrigger>
               <TabsTrigger
                 className="w-full flex justify-start py-2 px-6 cursor-pointer hover:opacity-90 border-0"
                 value="attributes"
@@ -78,6 +84,183 @@ export default function DocsPage() {
       </div>
       <div className="flex-1 p-10">
         <Tabs value={tab} className="w-full">
+          <TabsContent value="levels">
+            <h1 className="text-2xl font-bold mb-4">Centurio Sigil Levels</h1>
+
+            <p className="text-muted-foreground mb-2">
+              The mod introduces an upgrade system tied to the Clan Centurio.
+              Upon joining the clan, Montblanc will reward you with a special
+              item: the <strong>Centurio Sigil</strong>, said to absorb the
+              souls of enemies it defeats.
+            </p>
+
+            <p className="text-muted-foreground mb-2">
+              Each time you rank up in the Clan, you can bring materials to
+              Montblanc to refine your Sigil. This process upgrades the item and
+              unlocks stronger effects.
+            </p>
+
+            <h2 className="text-xl font-semibold my-4">Upgrade Requirements</h2>
+
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[220px]">Clan Rank</TableHead>
+                  <TableHead className="w-[220px]">Sigil Level</TableHead>
+                  <TableHead>Required Materials</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {[
+                  {
+                    rank: "None / Default",
+                    sigil: "None / Centurio Sigil",
+                    req: [],
+                  },
+                  {
+                    rank: "Moppet",
+                    sigil: "Centurio Sigil+1",
+                    req: [
+                      "18x Cactus Fruit",
+                      "17x Tanned Hide",
+                      "15x Wind Stone",
+                    ],
+                  },
+                  {
+                    rank: "Hedge Knight",
+                    sigil: "Centurio Sigil+2",
+                    req: [
+                      "22x Bone Fragment",
+                      "19x Earth Stone",
+                      "24x Dark Stone",
+                    ],
+                  },
+                  {
+                    rank: "Rear Guard",
+                    sigil: "Centurio Sigil+3",
+                    req: [
+                      "27x Solid Stone",
+                      "25x Foul Flesh",
+                      "10x Blood-darkened Bone",
+                    ],
+                  },
+                  {
+                    rank: "Vanguard",
+                    sigil: "Centurio Sigil+4",
+                    req: [
+                      "34x Yensa Scale",
+                      "28x Snake Skin",
+                      "20x Pointed Horn",
+                      "33x Drab Wool",
+                    ],
+                  },
+                  {
+                    rank: "Headhunter",
+                    sigil: "Centurio Sigil+5",
+                    req: [
+                      "15x Demon Eyeball",
+                      "36x Earth Magicite",
+                      "15x Quality Pelt",
+                      "25x Giant Feather",
+                    ],
+                  },
+                  {
+                    rank: "Ward of Justice",
+                    sigil: "Centurio Sigil+6",
+                    req: [
+                      "20x Fine Wool",
+                      "28x Large Feather",
+                      "18x Yellow Liquid",
+                      "27x Braid Wool",
+                    ],
+                  },
+                  {
+                    rank: "Brave Companion",
+                    sigil: "Centurio Sigil+7",
+                    req: [
+                      "26x Crooked Fang",
+                      "10x Tanned Tyrant Hide",
+                      "8x Adamantite",
+                      "12x Demon Tail",
+                      "16x Green Liquid",
+                    ],
+                  },
+                  {
+                    rank: "Riskbreaker",
+                    sigil: "Centurio Sigil+8",
+                    req: [
+                      "25x Coeurl Pelt",
+                      "15x Prime Pelt",
+                      "20x Tanned Giantskin",
+                      "30x Insect Husk",
+                      "20x Festering Flesh",
+                    ],
+                  },
+                  {
+                    rank: "Bubble Belt",
+                    sigil: "Centurio Sigil+9",
+                    req: [
+                      "45x Slaven Harness",
+                      "8x Book of Orgain",
+                      "8x Damascus Steel",
+                      "10x Corpse Fly",
+                      "6x Book of Orgain-Cent",
+                    ],
+                  },
+                  {
+                    rank: "Paragon of Justice",
+                    sigil: "Centurio Sigil+10",
+                    req: [
+                      "30x Silver Liquid",
+                      "42x Earth Crystal",
+                      "8x Behemoth Steak",
+                      "33x Storm Crystal",
+                      "10x Demon Drink",
+                      "18x Putrid Liquid",
+                    ],
+                  },
+                  {
+                    rank: "High Guardian",
+                    sigil: "Centurio Sigil+11",
+                    req: [
+                      "9x Dark Crystal",
+                      "10x Soul Powder",
+                      "10x Einherjarium",
+                      "10x Charger Barding",
+                      "10x Grimoire Aidhed",
+                      "6x Arcana",
+                    ],
+                  },
+                  {
+                    rank: "Knight of the Round",
+                    sigil: "Centurio Sigil+12",
+                    req: [
+                      "10x Soul of Thamasa",
+                      "6x High Arcana",
+                      "12x Capricorn Gem",
+                      "6x Gemsteel",
+                      "3x Serpentarius",
+                      "6x Empyreal Soul",
+                    ],
+                  },
+                ].map((row, i) => (
+                  <TableRow key={i}>
+                    <TableCell>{row.rank}</TableCell>
+                    <TableCell>{row.sigil}</TableCell>
+                    <TableCell>
+                      <div className="flex flex-col gap-1">
+                        {row.req.length > 0
+                          ? row.req.map((item, j) => (
+                              <span key={j}>{item}</span>
+                            ))
+                          : "None"}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TabsContent>
           <TabsContent value="attributes">
             <h1 className="text-2xl font-bold mb-4">Equipment Attributes</h1>
 

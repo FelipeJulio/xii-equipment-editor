@@ -19,6 +19,7 @@ import {
 import { EditButton } from "@/components/EditButton";
 import ItemImage from "@/components/ItemImage";
 import GameIcon from "@/components/GameIcon";
+import { TOTAL_SLOTS } from "@/lib/constants";
 
 export function getColumns(
   level: number,
@@ -27,7 +28,7 @@ export function getColumns(
 ): ColumnDef<EquipmentItem>[] {
   function safeArray<T>(arr: T[] | undefined, fallback: T): T[] {
     const base = Array.isArray(arr) ? arr : [];
-    const missing = Math.max(0, 12 - base.length);
+    const missing = Math.max(0, TOTAL_SLOTS - base.length);
     return [...base, ...Array.from({ length: missing }, () => fallback)];
   }
 
@@ -84,7 +85,7 @@ export function getColumns(
         const name = row.getValue("name") as string;
         return (
           <span className="font-medium" style={{ color: getSigilColor(level) }}>
-            {name}+{level}
+            {level === 0 ? name : `${name}+${level}`}
           </span>
         );
       },

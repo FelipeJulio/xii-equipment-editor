@@ -15,6 +15,7 @@ import { Separator } from "@/components/ui/separator";
 import { Star } from "lucide-react";
 import { attributeLabels, attributeLimits } from "@/typings/types";
 import type { AttributeKey } from "@/typings/types";
+import { TOTAL_SLOTS } from "@/lib/constants";
 
 interface GenerateAttributeProps {
   attributeKey: AttributeKey;
@@ -54,17 +55,17 @@ export function GenerateAttribute({
     if (isNaN(min) || isNaN(max)) return;
 
     const limits = attributeLimits[attributeKey] ?? { min: 0, max: 255 };
-    const newScales: number[] = new Array(12).fill(0);
+    const newScales: number[] = new Array(TOTAL_SLOTS).fill(0);
 
     if (mode === "linear") {
-      for (let i = 0; i < 12; i++) {
-        const raw = min + ((max - min) * i) / 11;
+      for (let i = 0; i < TOTAL_SLOTS; i++) {
+        const raw = min + ((max - min) * i) / (TOTAL_SLOTS - 1);
         const clamped = Math.max(limits.min, Math.min(raw, limits.max));
         newScales[i] = Math.round(clamped);
       }
     } else {
-      for (let i = 0; i < 12; i++) {
-        const t = i / 11;
+      for (let i = 0; i < TOTAL_SLOTS; i++) {
+        const t = i / (TOTAL_SLOTS - 1);
         const raw = min + (max - min) * Math.pow(t, factor);
         const clamped = Math.max(limits.min, Math.min(raw, limits.max));
         newScales[i] = Math.round(clamped);

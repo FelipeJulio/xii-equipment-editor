@@ -43,6 +43,7 @@ import { getColumns } from "@/components/EquipmentColumns";
 import GameIcon from "@/components/GameIcon";
 import { ExportDropdown } from "@/components/ExportDropdown";
 import { AugmentFilter } from "@/components/AugmentFilter";
+import { TOTAL_SLOTS } from "@/lib/constants";
 
 interface DataTableProps<TData extends EquipmentItem> {
   data: TData[];
@@ -63,7 +64,7 @@ export function DataTable<TData extends EquipmentItem>({
   const [affinityTypeFilter, setAffinityTypeFilter] = useState<string>("all");
   const [affinityElementFilter, setAffinityElementFilter] =
     useState<string>("all");
-  const [level, setLevel] = useState<number>(1);
+  const [level, setLevel] = useState<number>(0);
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 14 });
@@ -212,7 +213,7 @@ export function DataTable<TData extends EquipmentItem>({
     if (immunityFilter !== "all") count++;
     if (affinityTypeFilter !== "all") count++;
     if (affinityElementFilter !== "all") count++;
-    if (level !== 1) count++;
+    if (level !== 0) count++;
 
     return {
       filterCount: count,
@@ -424,8 +425,8 @@ export function DataTable<TData extends EquipmentItem>({
               <SelectValue placeholder="Centurio Sigil Level" />
             </SelectTrigger>
             <SelectContent className="max-h-96">
-              {Array.from({ length: 12 }, (_, i) => {
-                const lvl = i + 1;
+              {Array.from({ length: TOTAL_SLOTS }, (_, i) => {
+                const lvl = i;
                 return (
                   <SelectItem
                     key={lvl}
@@ -437,7 +438,7 @@ export function DataTable<TData extends EquipmentItem>({
                       className="font-medium"
                       style={{ color: getSigilColor(lvl) }}
                     >
-                      Centurio Sigil+{lvl}
+                      {lvl === 0 ? "Centurio Sigil" : `Centurio Sigil+${lvl}`}
                     </span>
                   </SelectItem>
                 );
@@ -461,7 +462,7 @@ export function DataTable<TData extends EquipmentItem>({
                   setImmunityFilter("all");
                   setAffinityTypeFilter("all");
                   setAffinityElementFilter("all");
-                  setLevel(1);
+                  setLevel(0);
                 }}
               >
                 {filterCount}

@@ -1,7 +1,5 @@
 import type { EquipmentItem } from "@/typings/types";
-
-const STORAGE_KEY = "xii-equipment-editor";
-const CURRENT_VERSION = 2;
+import { CURRENT_VERSION, STORAGE_KEY } from "@/lib/constants";
 
 interface StoredData {
   version: number;

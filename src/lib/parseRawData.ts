@@ -17,6 +17,7 @@ import type {
 
 import { elementIcons } from "@/typings/types";
 import type { RawEquipmentItem } from "@/typings/raw";
+import { TOTAL_SLOTS } from "@/lib/constants";
 
 // Categorias definidas
 const weaponCategories: WeaponCategoryName[] = [
@@ -79,7 +80,7 @@ export function parseRawData(): EquipmentItem[] {
     Object.entries(item.attr || {}).forEach(([rawKey, rawEntry]) => {
       const key = rawKey as AttributeKey;
       const { value, max } = rawEntry ?? { value: 0, max: 0 };
-      parsedAttr[key] = { value, scale: Array(12).fill(max) };
+      parsedAttr[key] = { value, scale: Array(TOTAL_SLOTS).fill(max) };
     });
 
     const parsedElement: {
@@ -92,7 +93,7 @@ export function parseRawData(): EquipmentItem[] {
             icon: elementIcons[item.element[0].name as ElementKey] ?? 0,
           }
         : {},
-      scale: Array.from({ length: 12 }, (_, i) => {
+      scale: Array.from({ length: TOTAL_SLOTS }, (_, i) => {
         const el = item.element?.[i];
         return el && el.name
           ? {
@@ -111,7 +112,7 @@ export function parseRawData(): EquipmentItem[] {
           (s): s is { name: string; icon: number } => typeof s.name === "string"
         )
         .map((s) => ({ name: s.name as StatusKey, icon: s.icon })),
-      scale: Array.from({ length: 12 }, (_, i) =>
+      scale: Array.from({ length: TOTAL_SLOTS }, (_, i) =>
         (arr?.[i] ?? [])
           .filter(
             (s): s is { name: string; icon: number } =>
@@ -134,7 +135,7 @@ export function parseRawData(): EquipmentItem[] {
           element: a.element as ElementKey,
           icon: elementIcons[a.element as ElementKey] ?? 0,
         })),
-      scale: Array.from({ length: 12 }, (_, i) =>
+      scale: Array.from({ length: TOTAL_SLOTS }, (_, i) =>
         (arr?.[i] ?? [])
           .filter(
             (a): a is { type: string; element: string; icon: number } =>

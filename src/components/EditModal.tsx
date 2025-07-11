@@ -70,6 +70,7 @@ import GameIcon from "@/components/GameIcon";
 import { getEquipmentData, saveEquipmentData } from "@/lib/localStorage";
 import ItemImage from "@/components/ItemImage";
 import { AugmentPicker } from "@/components/AugmentPicker";
+import { TOTAL_SLOTS } from "@/lib/constants";
 
 interface EditModalProps {
   item: EquipmentItem;
@@ -83,43 +84,46 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
       onhit: {
         value: item.onhit?.scale?.[0] ?? [],
         scale:
-          Array.isArray(item.onhit?.scale) && item.onhit.scale.length === 12
+          Array.isArray(item.onhit?.scale) &&
+          item.onhit.scale.length === TOTAL_SLOTS
             ? item.onhit.scale
-            : Array.from({ length: 12 }, () => []),
+            : Array.from({ length: TOTAL_SLOTS }, () => []),
       },
 
       onequip: {
         value: item.onequip?.scale?.[0] ?? [],
         scale:
-          Array.isArray(item.onequip?.scale) && item.onequip.scale.length === 12
+          Array.isArray(item.onequip?.scale) &&
+          item.onequip.scale.length === TOTAL_SLOTS
             ? item.onequip.scale
-            : Array.from({ length: 12 }, () => []),
+            : Array.from({ length: TOTAL_SLOTS }, () => []),
       },
 
       immunity: {
         value: item.immunity?.scale?.[0] ?? [],
         scale:
           Array.isArray(item.immunity?.scale) &&
-          item.immunity.scale.length === 12
+          item.immunity.scale.length === TOTAL_SLOTS
             ? item.immunity.scale
-            : Array.from({ length: 12 }, () => []),
+            : Array.from({ length: TOTAL_SLOTS }, () => []),
       },
 
       affinity: {
         value: item.affinity?.scale?.[0] ?? [],
         scale:
           Array.isArray(item.affinity?.scale) &&
-          item.affinity.scale.length === 12
+          item.affinity.scale.length === TOTAL_SLOTS
             ? item.affinity.scale
-            : Array.from({ length: 12 }, () => []),
+            : Array.from({ length: TOTAL_SLOTS }, () => []),
       },
 
       element: {
         value: item.element?.scale?.[0] ?? {},
         scale:
-          Array.isArray(item.element?.scale) && item.element.scale.length === 12
+          Array.isArray(item.element?.scale) &&
+          item.element.scale.length === TOTAL_SLOTS
             ? item.element.scale
-            : Array.from({ length: 12 }, () => ({})),
+            : Array.from({ length: TOTAL_SLOTS }, () => ({})),
       },
     };
   }
@@ -169,7 +173,7 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
     setEdited((prev) => {
       const newScale = [...prev.element.scale];
 
-      while (newScale.length < 12) {
+      while (newScale.length < TOTAL_SLOTS) {
         newScale.push({});
       }
 
@@ -196,7 +200,7 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
       const fieldData = prev[field];
       const newScale = [...fieldData.scale];
 
-      while (newScale.length < 12) {
+      while (newScale.length < TOTAL_SLOTS) {
         newScale.push([]);
       }
 
@@ -599,7 +603,7 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                 {getValidAttributes(edited.category).length > 0 && (
                   <TabsTrigger
                     value="attributes"
-                    className="cursor-pointer hover:opacity-90 border-2"
+                    className="cursor-pointer hover:opacity-90 border-2 hover:border-accent"
                   >
                     Attributes
                   </TabsTrigger>
@@ -609,21 +613,21 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                 ) && (
                   <TabsTrigger
                     value="augment"
-                    className="cursor-pointer hover:opacity-90 border-2"
+                    className="cursor-pointer hover:opacity-90 border-2 hover:border-accent"
                   >
                     Augments
                   </TabsTrigger>
                 )}
                 <TabsTrigger
                   value="elements"
-                  className="cursor-pointer hover:opacity-90 border-2"
+                  className="cursor-pointer hover:opacity-90 border-2 hover:border-accent"
                 >
                   Elements
                 </TabsTrigger>
                 {supportsOnHit(edited.category) && (
                   <TabsTrigger
                     value="onhit"
-                    className="cursor-pointer hover:opacity-90 border-2"
+                    className="cursor-pointer hover:opacity-90 border-2 hover:border-accent"
                   >
                     On-Hit
                   </TabsTrigger>
@@ -631,7 +635,7 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                 {supportsOnEquip(edited.category) && (
                   <TabsTrigger
                     value="onequip"
-                    className="cursor-pointer hover:opacity-90 border-2"
+                    className="cursor-pointer hover:opacity-90 border-2 hover:border-accent"
                   >
                     On-Equip
                   </TabsTrigger>
@@ -639,7 +643,7 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                 {supportsImmunity(edited.category) && (
                   <TabsTrigger
                     value="immunity"
-                    className="cursor-pointer hover:opacity-90 border-2"
+                    className="cursor-pointer hover:opacity-90 border-2 hover:border-accent"
                   >
                     Immunity
                   </TabsTrigger>
@@ -647,7 +651,7 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                 {supportsAffinity(edited.category) && (
                   <TabsTrigger
                     value="affinity"
-                    className="cursor-pointer hover:opacity-90 border-2"
+                    className="cursor-pointer hover:opacity-90 border-2 hover:border-accent"
                   >
                     Affinity
                   </TabsTrigger>
@@ -775,23 +779,25 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                 </div>
               </div>
               <div className="grid grid-cols-4 gap-x-3 gap-y-3 border p-3 rounded">
-                {Array.from({ length: 12 }).map((_, idx) => {
+                {Array.from({ length: TOTAL_SLOTS }).map((_, idx) => {
                   const entry = edited.attr.aug || {
                     value: 0,
-                    scale: Array(12).fill("none"),
+                    scale: Array(TOTAL_SLOTS).fill("none"),
                   };
                   const val = entry.scale[idx] || "none";
 
                   return (
                     <div key={idx} className="flex gap-2 flex-col">
-                      <Label>Level {idx + 1}</Label>
+                      <Label>
+                        {idx === 0 ? "Default (0)" : `Level ${idx}`}
+                      </Label>
                       <AugmentPicker
                         value={val}
                         onValueChange={(v) => {
                           setEdited((prev) => {
                             const current = prev.attr.aug || {
                               value: 0,
-                              scale: Array(12).fill("none"),
+                              scale: Array(TOTAL_SLOTS).fill("none"),
                             };
 
                             const newScale = [...current.scale];
@@ -822,7 +828,7 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
               {getValidAttributes(edited.category).map((key) => {
                 const entry = edited.attr[key] || {
                   value: 0,
-                  scale: Array(12).fill(0),
+                  scale: Array(TOTAL_SLOTS).fill(0),
                 };
                 const gridClass =
                   openedAttrKey === key
@@ -853,7 +859,9 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                     <div className={gridClass}>
                       {entry.scale.map((val, idx) => (
                         <div key={idx} className="flex gap-2 flex-col">
-                          <Label>Level {idx + 1}</Label>
+                          <Label>
+                            {idx === 0 ? "Default (0)" : `Level ${idx}`}
+                          </Label>
                           <Input
                             type="number"
                             min={attributeLimits[key]?.min ?? 0}
@@ -897,13 +905,15 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                 </div>
               </div>
               <div className="grid grid-cols-4 gap-x-3 gap-y-3 border p-3 rounded">
-                {Array.from({ length: 12 }).map((_, idx) => {
+                {Array.from({ length: TOTAL_SLOTS }).map((_, idx) => {
                   const entry = edited.element?.scale?.[idx];
                   const val = entry && entry.name ? entry.name : "none";
 
                   return (
                     <div key={idx} className="flex gap-2 flex-col">
-                      <Label>Level {idx + 1}</Label>
+                      <Label>
+                        {idx === 0 ? "Default (0)" : `Level ${idx}`}
+                      </Label>
                       <Select
                         value={val}
                         onValueChange={(v) =>
@@ -982,7 +992,9 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                     {fieldArr.map((lvlArr: StatusEntry[], lvlIdx: number) => (
                       <div key={lvlIdx} className="border p-3 rounded">
                         <div className="flex items-center justify-between">
-                          <p className="font-medium">Level {lvlIdx + 1}</p>
+                          <Label>
+                            {lvlIdx === 0 ? "Default (0)" : `Level ${lvlIdx}`}
+                          </Label>
                           <Button
                             size="sm"
                             className="cursor-pointer"
@@ -1113,7 +1125,9 @@ export function EditModalContent({ item, onClose }: EditModalProps) {
                 {edited.affinity.scale.map((lvl, lvlIdx) => (
                   <div key={lvlIdx} className="border p-3 rounded-sm">
                     <div className="flex items-center justify-between">
-                      <p className="font-medium">Level {lvlIdx + 1}</p>
+                      <Label>
+                        {lvlIdx === 0 ? "Default (0)" : `Level ${lvlIdx}`}
+                      </Label>
                       <Button
                         size="sm"
                         className="cursor-pointer"

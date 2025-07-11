@@ -1,5 +1,7 @@
 // Keys
 
+import { TOTAL_SLOTS } from "@/lib/constants";
+
 export type AttributeKey =
   | "rge"
   | "atk"
@@ -516,7 +518,7 @@ export const categoryToIconType: Record<CategoryName, IconType> = {
 export function safeArray<T>(
   arr: T[] | undefined,
   filler: T,
-  length = 12
+  length = TOTAL_SLOTS
 ): T[] {
   const base = Array.isArray(arr) ? arr : [];
   const missing = Math.max(0, length - base.length);
