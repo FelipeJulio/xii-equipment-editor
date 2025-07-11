@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   creator: "FehDead",
   publisher: "FehDead",
   generator: "Next.js",
-  metadataBase: new URL("https://felipejulio.github.io/xii-equipment-editor"),
+  metadataBase: new URL("https://felipejulio.github.io"),
   manifest: `${basePath}/manifest.json`,
   icons: {
     icon: [
