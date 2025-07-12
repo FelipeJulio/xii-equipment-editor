@@ -12,77 +12,94 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import GameIcon from "@/components/GameIcon";
+import { Button } from "@/components/ui/button";
 
 export default function DocsPage() {
   const [tab, setTab] = useState("levels");
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+
+  const tabs = [
+    { value: "levels", label: "Centurio Sigil Levels" },
+    { value: "attributes", label: "Attributes" },
+    { value: "elements", label: "Elements" },
+    { value: "onhit", label: "On-Hit" },
+    { value: "onequip", label: "On-Equip" },
+    { value: "immunity", label: "Immunity" },
+    { value: "affinity", label: "Affinity" },
+    { value: "issues", label: "Possible Issues" },
+    { value: "apply", label: "Apply progression" },
+  ];
 
   return (
-    <div className="flex w-full">
-      <div className="w-60 border-r p-4">
-        <div className="sticky top-[6rem] pt-4">
-          <Tabs value={tab} onValueChange={setTab} className="w-full sticky">
-            <h3 className="py-2 px-6 font-semibold">Docs</h3>
-            <TabsList className="flex flex-col items-start gap-2 w-full h-auto bg-transparent">
-              <TabsTrigger
-                className="w-full flex justify-start py-2 px-6 cursor-pointer hover:opacity-90 border-0"
-                value="levels"
-              >
-                Centurio Sigil Levels
-              </TabsTrigger>
-              <TabsTrigger
-                className="w-full flex justify-start py-2 px-6 cursor-pointer hover:opacity-90 border-0"
-                value="attributes"
-              >
-                Attributes
-              </TabsTrigger>
-              <TabsTrigger
-                className="w-full flex justify-start py-2 px-6 cursor-pointer hover:opacity-90 border-0"
-                value="elements"
-              >
-                Elements
-              </TabsTrigger>
-              <TabsTrigger
-                className="w-full flex justify-start py-2 px-6 cursor-pointer hover:opacity-90 border-0"
-                value="onhit"
-              >
-                On-Hit
-              </TabsTrigger>
-              <TabsTrigger
-                className="w-full flex justify-start py-2 px-6 cursor-pointer hover:opacity-90 border-0"
-                value="onequip"
-              >
-                On-Equip
-              </TabsTrigger>
-              <TabsTrigger
-                className="w-full flex justify-start py-2 px-6 cursor-pointer hover:opacity-90 border-0"
-                value="immunity"
-              >
-                Immunity
-              </TabsTrigger>
-              <TabsTrigger
-                className="w-full flex justify-start py-2 px-6 cursor-pointer hover:opacity-90 border-0"
-                value="affinity"
-              >
-                Affinity
-              </TabsTrigger>
-              <TabsTrigger
-                className="w-full flex justify-start py-2 px-6 cursor-pointer hover:opacity-90 border-0"
-                value="issues"
-              >
-                Possible Issues
-              </TabsTrigger>
-              <TabsTrigger
-                className="w-full flex justify-start py-2 px-6 cursor-pointer hover:opacity-90 border-0"
-                value="apply"
-              >
-                Apply progression
-              </TabsTrigger>
+    <div className="flex flex-col md:flex-row w-full">
+      <div className="md:hidden flex justify-between items-center px-4 py-2 border-b">
+        <h1 className="text-xl font-semibold">Docs</h1>
+        <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+          <SheetTrigger asChild>
+            <Button variant="outline" size="sm">
+              Docs menu
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-64">
+            <SheetHeader className="px-6">
+              <SheetTitle>Docs menu</SheetTitle>
+            </SheetHeader>
+            <Tabs
+              value={tab}
+              onValueChange={(value) => {
+                setTab(value);
+                setIsSheetOpen(false);
+              }}
+              className="w-full px-3"
+            >
+              <TabsList className="flex justify-start flex-col items-start gap-2 w-full bg-transparent">
+                {tabs.map((tabItem) => (
+                  <TabsTrigger
+                    key={tabItem.value}
+                    className="w-full justify-start px-2 py-1 text-left cursor-pointer"
+                    value={tabItem.value}
+                  >
+                    {tabItem.label}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
+          </SheetContent>
+        </Sheet>
+      </div>
+
+      <div className="hidden md:block md:w-60 border-r p-4 ">
+        <div className="sticky top-[7rem]">
+          <Tabs
+            value={tab}
+            onValueChange={setTab}
+            className="w-full flex flex-col mt-6"
+          >
+            <h3 className="text-2xl font-bold mb-4">Docs</h3>
+            <TabsList className="flex justify-start flex-col items-start gap-2 w-full bg-transparent">
+              {tabs.map((tabItem) => (
+                <TabsTrigger
+                  key={tabItem.value}
+                  className="w-full justify-start px-2 py-1 text-left cursor-pointer"
+                  value={tabItem.value}
+                >
+                  {tabItem.label}
+                </TabsTrigger>
+              ))}
             </TabsList>
           </Tabs>
         </div>
       </div>
-      <div className="flex-1 p-10">
+
+      <div className="flex-1 p-4 md:p-10">
         <Tabs value={tab} className="w-full">
           <TabsContent value="levels">
             <h1 className="text-2xl font-bold mb-4">Centurio Sigil Levels</h1>

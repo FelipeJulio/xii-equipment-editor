@@ -17,8 +17,8 @@ export function Header({
   }, [dark]);
 
   return (
-    <header className="w-full fixed z-10 left-0 top-0 flex justify-center border-b backdrop-blur-md">
-      <div className="w-full max-w-7xl flex justify-between items-center py-4 px-4">
+    <header className="w-full fixed z-10 left-0 top-0 flex justify-center border-b backdrop-blur-md p-4">
+      <div className="w-full max-w-7xl flex justify-between items-center gap-4">
         <Link href="/" className="flex flex-col justify-start items-start">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -26,7 +26,7 @@ export function Header({
             height="40"
             viewBox="0 0 348 40"
             fill="var(--color-foreground)"
-            className="h-7 w-auto"
+            className="flex h-auto w-full max-h-6"
           >
             <path d="M336.448 29.7097V11.0961C336.883 11.1473 337.369 11.1985 337.907 11.2497C338.469 11.2752 338.866 11.288 339.096 11.288C339.659 11.288 340.171 11.2624 340.631 11.2113C341.092 11.1601 341.463 11.1217 341.744 11.0961V15.8551C342.205 14.2688 342.87 13.0662 343.74 12.2475C344.815 11.2497 346.235 10.7507 348 10.7507C347.923 11.416 347.872 12.2475 347.847 13.2453C347.821 14.2176 347.808 15.1259 347.808 15.9702L347.463 16.2772C347.233 16.0981 346.938 15.9702 346.58 15.8934C346.222 15.8167 345.864 15.7783 345.506 15.7783C344.636 15.7783 343.881 16.0086 343.241 16.4691C342.627 16.9041 342.205 17.5181 341.975 18.3113C341.872 18.5927 341.808 18.9765 341.783 19.4626C341.757 19.9232 341.744 20.4733 341.744 21.1129V22.7632V29.7097C341.309 29.6585 340.99 29.6329 340.785 29.6329C339.889 29.5561 339.327 29.5178 339.096 29.5178C338.533 29.5178 338.022 29.5433 337.561 29.5945C337.101 29.6457 336.73 29.6841 336.448 29.7097Z" />
             <path d="M323.144 30.0551C320.304 30.0551 318.04 29.2235 316.351 27.5605C314.663 25.8974 313.818 23.6459 313.818 20.8059C313.818 17.7356 314.637 15.2922 316.275 13.4756C317.938 11.659 320.24 10.7507 323.183 10.7507C326.099 10.7507 328.402 11.5695 330.091 13.2069C331.779 14.8444 332.624 17.096 332.624 19.9615C332.624 22.9551 331.805 25.3601 330.168 27.1767C328.428 29.0956 326.087 30.0551 323.144 30.0551ZM323.413 12.4778C321.98 12.4778 320.944 13.2709 320.304 14.8572C319.767 16.2133 319.498 18.1578 319.498 20.6907C319.498 22.6864 319.677 24.2599 320.036 25.4113C320.624 27.3558 321.66 28.328 323.144 28.328C324.5 28.328 325.498 27.3686 326.138 25.4497C326.675 23.8633 326.944 21.8293 326.944 19.3475C326.944 17.2751 326.688 15.6632 326.176 14.5118C325.562 13.1558 324.641 12.4778 323.413 12.4778Z" />
@@ -52,7 +52,7 @@ export function Header({
         <div className="flex items-center gap-4">
           <Link
             href="/"
-            className="text-sm font-medium underline underline-offset-4 hover:text-primary transition-colors"
+            className="text-sm font-medium underline underline-offset-4 hover:text-primary transition-colors hidden md:block"
           >
             Editor
           </Link>
