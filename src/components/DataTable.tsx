@@ -91,13 +91,13 @@ export function DataTable<TData extends EquipmentItem>({
         if (categoryFilter !== "all" && item.category !== categoryFilter)
           return false;
 
-        const augmentValue = item.attr["aug"]?.scale?.[level - 1] ?? 255;
+        const augmentValue = item.attr["aug"]?.scale?.[level] ?? 255;
         if (augmentFilter !== "all" && String(augmentValue) !== augmentFilter)
           return false;
 
         if (
           elementFilter !== "all" &&
-          ![item.element.scale[level - 1]].some(
+          ![item.element.scale[level]].some(
             (e: ElementEntry | undefined) => e?.name === elementFilter
           )
         )
@@ -105,7 +105,7 @@ export function DataTable<TData extends EquipmentItem>({
 
         if (
           onhitFilter !== "all" &&
-          !item.onhit.scale[level - 1].some(
+          !item.onhit.scale[level].some(
             (s: StatusEntry) => s.name === onhitFilter
           )
         )
@@ -113,7 +113,7 @@ export function DataTable<TData extends EquipmentItem>({
 
         if (
           onequipFilter !== "all" &&
-          !item.onequip.scale[level - 1].some(
+          !item.onequip.scale[level].some(
             (s: StatusEntry) => s.name === onequipFilter
           )
         )
@@ -121,13 +121,13 @@ export function DataTable<TData extends EquipmentItem>({
 
         if (
           immunityFilter !== "all" &&
-          !item.immunity.scale[level - 1].some(
+          !item.immunity.scale[level].some(
             (s: StatusEntry) => s.name === immunityFilter
           )
         )
           return false;
 
-        const affinities = item.affinity.scale[level - 1];
+        const affinities = item.affinity.scale[level];
 
         if (affinityTypeFilter !== "all" && affinityElementFilter !== "all") {
           if (

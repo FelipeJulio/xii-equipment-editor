@@ -117,7 +117,7 @@ export function getColumns(
       header: "Augment",
       cell: ({ row }) => {
         const augmentAttr = row.original.attr["aug"];
-        const value = augmentAttr?.scale?.[level - 1] ?? 255;
+        const value = augmentAttr?.scale?.[level] ?? 255;
 
         if (value === 255) {
           return "-";
@@ -132,7 +132,7 @@ export function getColumns(
       id: "element",
       header: "Elements",
       cell: ({ row }) => {
-        const entry = row.original.element.scale[level - 1] as ElementEntry;
+        const entry = row.original.element.scale[level] as ElementEntry;
 
         if (!entry || !entry.name) {
           return "-";
@@ -155,7 +155,7 @@ export function getColumns(
       header: "On-Hit",
       cell: ({ row }) => {
         const onhit = safeArray(row.original.onhit.scale, []);
-        return renderStatusEntries(onhit[level - 1] || []);
+        return renderStatusEntries(onhit[level] || []);
       },
     },
     {
@@ -163,7 +163,7 @@ export function getColumns(
       header: "On-Equip",
       cell: ({ row }) => {
         const onequip = safeArray(row.original.onequip.scale, []);
-        return renderStatusEntries(onequip[level - 1] || []);
+        return renderStatusEntries(onequip[level] || []);
       },
     },
     {
@@ -171,7 +171,7 @@ export function getColumns(
       header: "Immunity",
       cell: ({ row }) => {
         const immunity = safeArray(row.original.immunity.scale, []);
-        return renderStatusEntries(immunity[level - 1] || []);
+        return renderStatusEntries(immunity[level] || []);
       },
     },
 
@@ -180,7 +180,7 @@ export function getColumns(
       header: "Affinity",
       cell: ({ row }) => {
         const affinity = safeArray(row.original.affinity.scale, []);
-        const entries: AffinityEntry[] = affinity[level - 1] || [];
+        const entries: AffinityEntry[] = affinity[level] || [];
         if (entries.length === 0) {
           return "-";
         }
